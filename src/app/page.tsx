@@ -18,7 +18,7 @@ export default function Home() {
           <div className='w-full flex justify-center'>
             <Link
               href="/token"
-              className="px-4 py-2 text-gray-700 font-bold mb-2 text-lg"
+              className="px-4 py-2 text-gray-700 font-bold mb-2 text-xl"
             >
               [create]
             </Link>
