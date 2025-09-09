@@ -430,7 +430,7 @@ const PumpTokenCreator = () => {
                     className="overflow-hidden"
                   >
                     <div className="py-2 mt-2">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-gray-400 font-medium mb-2">Twitter</label>
                           <input
@@ -439,18 +439,6 @@ const PumpTokenCreator = () => {
                             value={formData.twitter}
                             onChange={handleInputChange}
                             placeholder="https://twitter.com/..."
-                            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label className="block text-gray-400 font-medium mb-2">Telegram</label>
-                          <input
-                            type="url"
-                            name="telegram"
-                            value={formData.telegram}
-                            onChange={handleInputChange}
-                            placeholder="https://t.me/..."
                             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
