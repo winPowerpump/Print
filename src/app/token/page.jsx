@@ -199,13 +199,8 @@ const PumpTokenCreator = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8 pt-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Create Token
-          </h1>
-        </div>
+    <div className="min-h-screen bg-white p-4 flex items-center">
+      <div className="w-xl mx-auto">
 
         <Link
           href="/"
@@ -241,7 +236,7 @@ const PumpTokenCreator = () => {
                     <img src={previewImage} alt="Preview" className="w-20 h-20 object-cover rounded-lg" />
                   ) : (
                     <>
-                      <div className="w-8 h-8 bg-gray-400 rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
+                      <div className="w-8 h-8 bg-black rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
                       <span className="text-gray-500">Click to upload image</span>
                     </>
                   )}
@@ -256,7 +251,7 @@ const PumpTokenCreator = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                placeholder="e.g. Moon Rocket"
+                placeholder="Printed"
                 required
                 className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
@@ -269,7 +264,7 @@ const PumpTokenCreator = () => {
                 name="symbol"
                 value={formData.symbol}
                 onChange={handleInputChange}
-                placeholder="e.g. MOON"
+                placeholder="PRINT"
                 required
                 maxLength="10"
                 className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
@@ -283,7 +278,7 @@ const PumpTokenCreator = () => {
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Tell the world about your token..."
-                rows={3}
+                rows={2}
                 maxLength="500"
                 className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
@@ -362,7 +357,7 @@ const PumpTokenCreator = () => {
               type="button"
               onClick={createPumpToken}
               disabled={loading || !formData.name || !formData.symbol}
-              className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+              className="w-full bg-black text-white py-4 px-6 rounded-lg font-bold text-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
             >
               {loading ? (
                 <>
