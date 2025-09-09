@@ -432,7 +432,7 @@ const PumpTokenCreator = () => {
                     <div className="py-2 mt-2">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-gray-400 font-medium mb-2">Twitter</label>
+                          <label className="block text-gray-400 font-medium mb-2">X/Twitter</label>
                           <input
                             type="url"
                             name="twitter"
