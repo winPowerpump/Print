@@ -49,7 +49,7 @@ export default function XVerification() {
   // Authenticated state
   if (session) {
     return (
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <div className="max-w-md mx-auto bg-white rounded-xl p-6 border border-gray-200">
         <div className="text-center">
           {/* Profile Image */}
           <div className="relative w-20 h-20 mx-auto mb-4">
