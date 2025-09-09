@@ -378,7 +378,7 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-2">Symbol*</label>
+              <label className="block text-gray-400 font-semibold mb-2">Ticker*</label>
               <input
                 type="text"
                 name="symbol"
