@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-[#15161B] py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="absolute top-0 left-[9%]">
           <img src="/print.png" className='w-[75px] h-auto' />
@@ -18,12 +18,12 @@ export default function Home() {
           <div className='w-full flex justify-center'>
             <Link
               href="/token"
-              className="px-4 py-2 text-gray-700 font-bold mb-2 text-xl"
+              className="px-4 py-2 text-gray-400 font-bold mb-2 text-xl"
             >
               [create]
             </Link>
           </div>
-          <div className='text-center text-6xl text-balance font-bold'>
+          <div className='text-center text-6xl text-balance font-bold text-white'>
             Direct fees to your favorite creators.
           </div>
         </div>

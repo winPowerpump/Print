@@ -309,17 +309,17 @@ const PumpTokenCreator = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-4 flex items-center">
+    <div className="min-h-screen bg-[#15161B] p-4 flex items-center">
       <div className="w-xl mx-auto">
 
         <Link
           href="/"
-          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-700"
+          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
         >
           <IoMdArrowRoundBack size={30} />
         </Link>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-8">
+        <div className="bg-[#15161B] border border-gray-200 rounded-2xl p-8">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
               <span className="text-red-600 font-semibold mr-2">!</span>
@@ -339,7 +339,7 @@ const PumpTokenCreator = () => {
 
           <div className="space-y-6">
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Image</label>
+              <label className="block text-gray-400 font-semibold mb-2">Image</label>
               <div className="relative">
                 <input
                   type="file"
@@ -350,13 +350,13 @@ const PumpTokenCreator = () => {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-gray-50"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-[#24252B]"
                 >
                   {previewImage ? (
                     <img src={previewImage} alt="Preview" className="w-20 h-20 object-cover rounded-lg" />
                   ) : (
                     <>
-                      <div className="w-8 h-8 bg-black rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
+                      <div className="w-8 h-8 border border-gray-300 rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
                       <span className="text-gray-500">Click to upload image</span>
                     </>
                   )}
@@ -365,7 +365,7 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Name*</label>
+              <label className="block text-gray-400 font-semibold mb-2">Name*</label>
               <input
                 type="text"
                 name="name"
@@ -373,12 +373,12 @@ const PumpTokenCreator = () => {
                 onChange={handleInputChange}
                 placeholder="Printed"
                 required
-                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Symbol*</label>
+              <label className="block text-gray-400 font-semibold mb-2">Symbol*</label>
               <input
                 type="text"
                 name="symbol"
@@ -387,12 +387,12 @@ const PumpTokenCreator = () => {
                 placeholder="PRINT"
                 required
                 maxLength="10"
-                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
+                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 font-semibold mb-2">Description</label>
+              <label className="block text-gray-400 font-semibold mb-2">Description</label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -400,7 +400,7 @@ const PumpTokenCreator = () => {
                 placeholder="Tell the world about your token..."
                 rows={2}
                 maxLength="500"
-                className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500 characters</p>
             </div>
@@ -409,7 +409,7 @@ const PumpTokenCreator = () => {
               <button
                 type="button"
                 onClick={() => setShowLinks(!showLinks)}
-                className="flex items-center justify-between w-full py-1 text-gray-700 font-semibold"
+                className="flex items-center justify-between w-full py-1 text-gray-400 font-semibold"
               >
                 <span>Social Links (Optional)</span>
                 <motion.div
@@ -432,38 +432,38 @@ const PumpTokenCreator = () => {
                     <div className="py-2 mt-2">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-gray-700 font-medium mb-2">Twitter</label>
+                          <label className="block text-gray-400 font-medium mb-2">Twitter</label>
                           <input
                             type="url"
                             name="twitter"
                             value={formData.twitter}
                             onChange={handleInputChange}
                             placeholder="https://twitter.com/..."
-                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-gray-700 font-medium mb-2">Telegram</label>
+                          <label className="block text-gray-400 font-medium mb-2">Telegram</label>
                           <input
                             type="url"
                             name="telegram"
                             value={formData.telegram}
                             onChange={handleInputChange}
                             placeholder="https://t.me/..."
-                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                         
                         <div>
-                          <label className="block text-gray-700 font-medium mb-2">Website</label>
+                          <label className="block text-gray-400 font-medium mb-2">Website</label>
                           <input
                             type="url"
                             name="website"
                             value={formData.website}
                             onChange={handleInputChange}
                             placeholder="https://..."
-                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                       </div>
@@ -477,7 +477,7 @@ const PumpTokenCreator = () => {
               type="button"
               onClick={createPumpToken}
               disabled={loading || !formData.name || !formData.symbol}
-              className="w-full bg-black text-white py-4 px-6 rounded-lg font-bold text-lg transform hover:scale-[101%] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center cursor-pointer"
+              className="w-full bg-[#67D682] text-white py-4 px-6 rounded-lg font-bold text-lg transform hover:scale-[101%] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center cursor-pointer"
             >
               {loading ? (
                 <>
