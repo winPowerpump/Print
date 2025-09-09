@@ -155,28 +155,12 @@ export default function XVerification() {
 
   // Unauthenticated state
   return (
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+    <div className="w-full flex justify-center">
       <div className="text-center">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            X Account Verification
-          </h2>
-          <p className="text-gray-600">
-            Sign in with your X account to verify your identity as the target user
-          </p>
-        </div>
-        
-        {/* Sign In Button */}
         <button
           onClick={handleSignIn}
           disabled={isLoading}
-          className="w-full bg-black text-white py-4 px-6 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium text-lg"
+          className="w-min whitespace-nowrap bg-black text-white py-4 px-6 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium text-lg"
         >
           {isLoading ? (
             <>
@@ -185,18 +169,13 @@ export default function XVerification() {
             </>
           ) : (
             <>
-              <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+              Claim
+              <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
-              Sign in with X
             </>
           )}
         </button>
-        
-        {/* Info Note */}
-        <p className="mt-4 text-xs text-gray-500">
-          You will be redirected to X to authorize this application
-        </p>
       </div>
     </div>
   )

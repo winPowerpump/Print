@@ -19,7 +19,7 @@ export default function Home() {
         
         {/* Protected Content Section */}
         <ProtectedContent>
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-white rounded-xl p-8 border border-gray-200">
             {/* Success Header */}
             <div className="text-center mb-8">
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">

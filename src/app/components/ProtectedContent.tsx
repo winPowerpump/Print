@@ -27,7 +27,7 @@ export default function ProtectedContent({
   // Not authenticated
   if (!session) {
     return fallback || (
-      <div className="text-center p-8 bg-white rounded-lg shadow-md border border-gray-200">
+      <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
         <div className="max-w-md mx-auto">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -35,11 +35,8 @@ export default function ProtectedContent({
             </svg>
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Authentication Required
+            Auth Required
           </h2>
-          <p className="text-gray-600">
-            Please sign in with your X account to access this protected content.
-          </p>
         </div>
       </div>
     )
