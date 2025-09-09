@@ -319,7 +319,7 @@ const PumpTokenCreator = () => {
           <IoMdArrowRoundBack size={30} />
         </Link>
 
-        <div className="bg-[#15161B] border border-gray-200 rounded-2xl p-8">
+        <div className="bg-[#15161B] border border-[#2F3036] rounded-2xl p-8">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
               <span className="text-red-600 font-semibold mr-2">!</span>
@@ -350,13 +350,13 @@ const PumpTokenCreator = () => {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-[#24252B]"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[#2F3036] rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-[#24252B]"
                 >
                   {previewImage ? (
                     <img src={previewImage} alt="Preview" className="w-20 h-20 object-cover rounded-lg" />
                   ) : (
                     <>
-                      <div className="w-8 h-8 border border-gray-300 rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
+                      <div className="w-8 h-8 border border-[#2F3036] rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
                       <span className="text-gray-500">Click to upload image</span>
                     </>
                   )}
@@ -373,7 +373,7 @@ const PumpTokenCreator = () => {
                 onChange={handleInputChange}
                 placeholder="Printed"
                 required
-                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -387,7 +387,7 @@ const PumpTokenCreator = () => {
                 placeholder="PRINT"
                 required
                 maxLength="10"
-                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
               />
             </div>
 
@@ -400,7 +400,7 @@ const PumpTokenCreator = () => {
                 placeholder="Tell the world about your token..."
                 rows={2}
                 maxLength="500"
-                className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500 characters</p>
             </div>
@@ -439,7 +439,7 @@ const PumpTokenCreator = () => {
                             value={formData.twitter}
                             onChange={handleInputChange}
                             placeholder="https://twitter.com/..."
-                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                         
@@ -451,7 +451,7 @@ const PumpTokenCreator = () => {
                             value={formData.telegram}
                             onChange={handleInputChange}
                             placeholder="https://t.me/..."
-                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                         
@@ -463,7 +463,7 @@ const PumpTokenCreator = () => {
                             value={formData.website}
                             onChange={handleInputChange}
                             placeholder="https://..."
-                            className="w-full bg-[#24252B] border border-gray-300 rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
                       </div>
