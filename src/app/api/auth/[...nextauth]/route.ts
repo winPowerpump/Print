@@ -1,6 +1,61 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import TwitterProvider from 'next-auth/providers/twitter'
 
+// Define the Twitter API response structure
+interface TwitterUserData {
+  id: string
+  name: string
+  username: string
+  verified?: boolean
+  profile_image_url?: string
+  public_metrics?: {
+    followers_count: number
+    following_count: number
+    tweet_count: number
+    listed_count: number
+  }
+}
+
+// Twitter profile can come in two formats
+interface TwitterProfile {
+  data?: TwitterUserData
+  id?: string
+  name?: string
+  username?: string
+  verified?: boolean
+  profile_image_url?: string
+  public_metrics?: TwitterUserData['public_metrics']
+}
+
+// Extend the default session and token types
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string
+    user: {
+      id?: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+      xUserId?: string
+      xUsername?: string
+      xVerified?: boolean
+      isTargetAccount?: boolean
+    }
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string
+    xUserId?: string
+    xUsername?: string
+    xName?: string
+    xVerified?: boolean
+    xProfileImage?: string
+    isTargetAccount?: boolean
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     TwitterProvider({
@@ -20,8 +75,9 @@ export const authOptions: NextAuthOptions = {
       if (account && profile) {
         console.log('X Profile received:', profile)
         
-        // Handle both possible response formats
-        const userData = (profile as any).data || profile
+        // Handle both possible response formats with proper typing
+        const twitterProfile = profile as TwitterProfile
+        const userData = twitterProfile.data || twitterProfile
         
         // Store user info in token
         token.accessToken = account.access_token
@@ -54,15 +110,15 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // Pass relevant info to session
       if (token) {
-        session.accessToken = token.accessToken as string
-        session.user.xUserId = token.xUserId as string
-        session.user.xUsername = token.xUsername as string
-        session.user.xVerified = token.xVerified as boolean
-        session.user.isTargetAccount = token.isTargetAccount as boolean
+        session.accessToken = token.accessToken
+        session.user.xUserId = token.xUserId
+        session.user.xUsername = token.xUsername
+        session.user.xVerified = token.xVerified
+        session.user.isTargetAccount = token.isTargetAccount
         
         // Override NextAuth defaults with X data
-        session.user.name = token.xName as string
-        session.user.image = token.xProfileImage as string
+        session.user.name = token.xName
+        session.user.image = token.xProfileImage
       }
       return session
     },
@@ -71,7 +127,8 @@ export const authOptions: NextAuthOptions = {
       // Optional: Block sign-in if not target account
       // Uncomment the lines below to only allow the target account to sign in
       
-      // const userData = (profile as any)?.data || profile
+      // const twitterProfile = profile as TwitterProfile
+      // const userData = twitterProfile?.data || twitterProfile
       // const targetUsername = process.env.TARGET_X_USERNAME?.toLowerCase()
       // const targetUserId = process.env.TARGET_X_USER_ID
       // const isTarget = userData?.username?.toLowerCase() === targetUsername || userData?.id === targetUserId

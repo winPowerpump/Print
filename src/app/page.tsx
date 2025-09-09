@@ -71,7 +71,7 @@ export default function Home() {
                     </h3>
                   </div>
                   <p className="text-green-800">
-                    OAuth 2.0 authentication ensures secure and reliable identity verification through X's official API.
+                    OAuth 2.0 authentication ensures secure and reliable identity verification through X official API.
                   </p>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function Home() {
                 </h3>
                 <div className="prose text-gray-600 max-w-none">
                   <p className="mb-4">
-                    This verification system uses X's OAuth 2.0 API to securely authenticate users. When you sign in, 
+                    This verification system uses X OAuth 2.0 API to securely authenticate users. When you sign in, 
                     the system checks your X account details against a predefined target account (username and user ID).
                   </p>
                   <p className="mb-4">
