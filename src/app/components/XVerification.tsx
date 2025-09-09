@@ -128,7 +128,7 @@ export default function XVerification() {
         <button
           onClick={handleSignIn}
           disabled={isLoading}
-          className="w-min whitespace-nowrap bg-black text-white py-4 px-6 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium text-lg"
+          className="w-min whitespace-nowrap bg-black text-white py-2 px-3 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium text-lg"
         >
           {isLoading ? (
             <>
