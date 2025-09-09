@@ -93,9 +93,6 @@ export default function XVerification() {
                   <h4 className="text-lg font-semibold text-green-800">
                     ✅ Account Verified!
                   </h4>
-                  <p className="text-sm text-green-700">
-                    You are authenticated as the target account.
-                  </p>
                 </div>
               </div>
             </div>
