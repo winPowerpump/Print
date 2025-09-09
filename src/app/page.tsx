@@ -5,10 +5,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="absolute top-4 left-4">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Print
-          </h1>
+        <div className="absolute top-0 left-0">
+          <img src="/print.png" className='w-[75px] h-auto' />
         </div>
         
         <div className="absolute top-4 right-4">
