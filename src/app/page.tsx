@@ -8,12 +8,8 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            X Account Verification
+            Print
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Secure authentication system that verifies if you are the owner of a specific X (Twitter) account. 
-            Only the target account holder can access protected content.
-          </p>
         </div>
         
         {/* Verification Component */}
