@@ -482,10 +482,10 @@ const PumpTokenCreator = () => {
               {loading ? (
                 <>
                   <div className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creating Token...
+                  Creating...
                 </>
               ) : (
-                'Create Token'
+                'Create'
               )}
             </button>
           </div>
