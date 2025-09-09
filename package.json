@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "bs58": "^6.0.0",
     "framer-motion": "^12.23.12",
     "next": "15.5.2",
     "next-auth": "^4.24.11",
