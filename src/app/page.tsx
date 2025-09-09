@@ -137,14 +137,6 @@ export default function Home() {
             </div>
           </div>
         </ProtectedContent>
-
-        {/* Footer */}
-        <div className="text-center mt-12 text-gray-500">
-          <p>
-            Built with Next.js, NextAuth.js, and X API v2 | 
-            <span className="ml-2">Uses OAuth 2.0 for secure authentication</span>
-          </p>
-        </div>
       </div>
     </div>
   )
