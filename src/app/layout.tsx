@@ -6,8 +6,8 @@ import SessionProvider from './components/SessionProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'X Account Verification',
-  description: 'Verify specific X (Twitter) account ownership',
+  title: 'Print',
+  description: 'Direct fees to your favorite creators',
 }
 
 export default function RootLayout({
