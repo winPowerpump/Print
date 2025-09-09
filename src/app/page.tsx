@@ -28,11 +28,8 @@ export default function Home() {
                 </svg>
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                🎉 Welcome, Verified User!
+                Welcome, Verified User!
               </h2>
-              <p className="text-gray-600">
-                You have successfully authenticated as the target X account.
-              </p>
             </div>
           </div>
         </ProtectedContent>
