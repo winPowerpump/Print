@@ -1,19 +1,7 @@
 'use client'
 
-import { getProviders, signIn, getSession }
-
-export default function SignIn() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="loading-spinner"></div>
-      </div>
-    }>
-      <SignInContent />
-    </Suspense>
-  )
-} from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { getProviders, signIn } from 'next-auth/react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 interface Provider {
@@ -24,7 +12,7 @@ interface Provider {
   callbackUrl: string
 }
 
-export default function SignIn() {
+function SignInContent() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -193,5 +181,17 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="loading-spinner"></div>
+      </div>
+    }>
+      <SignInContent />
+    </Suspense>
   )
 }
