@@ -51,16 +51,6 @@ export default function XVerification() {
     return (
       <div className="max-w-md mx-auto bg-white rounded-xl p-6 border border-gray-200">
         <div className="text-center">
-          {/* Profile Image */}
-          <div className="relative w-20 h-20 mx-auto mb-4">
-            <Image 
-              src={session.user.image || '/default-avatar.png'} 
-              alt="Profile" 
-              fill
-              className="rounded-full object-cover"
-              sizes="80px"
-            />
-          </div>
           
           {/* User Info */}
           <h3 className="text-xl font-bold text-gray-900 mb-1">
@@ -84,11 +74,6 @@ export default function XVerification() {
           {session.user.isTargetAccount ? (
             <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
               <div className="flex items-center justify-center">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
                 <div className="ml-3">
                   <h4 className="text-lg font-semibold text-green-800">
                     ✅ Account Verified!
@@ -115,20 +100,6 @@ export default function XVerification() {
               </div>
             </div>
           )}
-          
-          {/* User Details */}
-          <div className="text-left bg-gray-50 rounded-lg p-3 mb-4 text-sm">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <span className="font-medium text-gray-700">User ID:</span>
-                <p className="text-gray-600 break-all">{session.user.xUserId}</p>
-              </div>
-              <div>
-                <span className="font-medium text-gray-700">Username:</span>
-                <p className="text-gray-600">@{session.user.xUsername}</p>
-              </div>
-            </div>
-          </div>
           
           {/* Sign Out Button */}
           <button
