@@ -1,3 +1,5 @@
+import XVerification from "../components/XVerification";
+import ProtectedContent from "../components/ProtectedContent";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
 
@@ -10,6 +12,10 @@ export default function Claim() {
         >
           <IoMdArrowRoundBack size={30} />
         </Link>
+
+        <div className="h-screen flex justify-center items-center">
+            <XVerification />
+        </div>
     </div>
   )
 }

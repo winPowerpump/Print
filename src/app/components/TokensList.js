@@ -91,15 +91,8 @@ const TokensList = () => {
 
   if (loading && tokens.length === 0) {
     return (
-      <div className="bg-[#1A1B21] border border-[#2F3036] rounded-xl p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-[#2F3036] rounded w-1/4"></div>
-          <div className="space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-[#2F3036] rounded"></div>
-            ))}
-          </div>
-        </div>
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-3 border-gray-300 border-t-[#67D682]"></div>
       </div>
     );
   }
