@@ -80,15 +80,6 @@ export default function Claim() {
         <p className="text-gray-400">
           {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
         </p>
-        
-        {/* Debug info - remove this in production */}
-        <div className="mt-4 p-4 bg-gray-800 rounded text-sm text-gray-300">
-          <p><strong>Debug Info:</strong></p>
-          <p>User: {user ? JSON.stringify(user) : 'null'}</p>
-          <p>Loading: {loading.toString()}</p>
-          <p>Error: {error || 'none'}</p>
-          <p>Tokens count: {tokens.length}</p>
-        </div>
       </div>
 
       {error && (
