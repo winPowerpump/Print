@@ -150,7 +150,7 @@ const PumpTokenCreator = () => {
 
   return (
     <div className="min-h-screen bg-[#15161B] p-4 flex items-center">
-      <div className='absolute bottom-3 -translate-x-1/2 left-1/2 text-gray-300 hidden md:flex justify-center items-center'>
+      <div className='absolute bottom-3 -translate-x-1/2 left-1/2 text-gray-500 hidden md:flex justify-center items-center'>
         powered by <a href="https://pump.fun/board"><img src="pill.png" className='w-12' /></a>
       </div>
 
