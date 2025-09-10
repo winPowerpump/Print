@@ -411,7 +411,7 @@ const PumpTokenCreator = () => {
                 maxLength="500"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
-              <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500 characters</p>
+              <p className="text-xs text-gray-500 mt-1 hidden">{formData.description.length}/500 characters</p>
             </div>
 
             <div>
