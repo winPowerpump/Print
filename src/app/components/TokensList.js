@@ -237,7 +237,7 @@ const TokensList = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       {token.mint_address && (
-                        <div className="text-gray-300 font-mono text-[10px] truncate">
+                        <div className="text-gray-300 font-mono text-[8px] truncate">
                           {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
                         </div>
                       )}
