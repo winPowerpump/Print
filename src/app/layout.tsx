@@ -6,7 +6,7 @@ import SessionProvider from './components/SessionProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Print',
+  title: 'Printed',
   description: 'Direct fees to your favorite creators',
 }
 

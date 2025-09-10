@@ -373,7 +373,7 @@ const PumpTokenCreator = () => {
                 onChange={handleInputChange}
                 placeholder="Printed"
                 required
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
@@ -387,7 +387,7 @@ const PumpTokenCreator = () => {
                 placeholder="PRINT"
                 required
                 maxLength="10"
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
               />
             </div>
 
@@ -400,7 +400,7 @@ const PumpTokenCreator = () => {
                 placeholder="Tell the world about your token..."
                 rows={2}
                 maxLength="500"
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500 characters</p>
             </div>
