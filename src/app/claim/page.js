@@ -94,7 +94,7 @@ export default function Claim() {
       <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white mb-2">
-            Tokens (@{user?.username})
+            Tokens
           </h2>
           <p className="text-gray-400">
             {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
