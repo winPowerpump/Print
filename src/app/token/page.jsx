@@ -344,7 +344,7 @@ const PumpTokenCreator = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Image section - left half */}
               <div>
-                <label className="block text-gray-400 font-semibold mb-2">Image</label>
+                <label className="block text-gray-400 font-semibold mb-2">Image*</label>
                 <div className="relative">
                   <input
                     type="file"
@@ -415,13 +415,13 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-2">Fee Account</label>
+              <label className="block text-gray-400 font-semibold mb-2">Fee Account*</label>
               <input
                 type="text"
                 name="directFeesTo"
                 value={formData.directFeesTo}
                 onChange={handleInputChange}
-                placeholder="Enter X account to recieve fees"
+                placeholder="@printedwtf"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
