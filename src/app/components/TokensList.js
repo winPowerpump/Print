@@ -89,6 +89,14 @@ const TokensList = () => {
            token.transaction_signature?.startsWith('test-');
   };
 
+  // Get Twitter profile image URL using unavatar.io
+  const getTwitterProfileImage = (username) => {
+    if (!username) return null;
+    // Remove @ symbol if present
+    const cleanUsername = username.replace('@', '');
+    return `https://unavatar.io/twitter/${cleanUsername}`;
+  };
+
   if (loading && tokens.length === 0) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -100,9 +108,9 @@ const TokensList = () => {
   return (
     <div>
       {/* Search and Filters - Single Line */}
-      <div className="flex items-center justify-center gap-4 mb-6">
+      <div className="flex items-center justify-center gap-2 mb-6">
         {/* Search - 80% */}
-        <div className="relative w-[40%]">
+        <div className="relative w-[50%] md:w-[40%]">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
           <input
             type="text"
@@ -114,8 +122,8 @@ const TokensList = () => {
         </div>
 
         {/* Status Filter - 10% */}
-        <div className="relative w-[10%]">
-          <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+        <div className="relative w-[15%] md:w-[10%]">
+          <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs md:text-sm" />
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange('status', e.target.value)}
@@ -132,7 +140,7 @@ const TokensList = () => {
         <button
           onClick={fetchTokens}
           disabled={loading}
-          className="w-[5%] bg-[#15161B] border border-[#2F3036] text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
+          className="w-[10%] md:w-[5%] bg-[#15161B] border border-[#2F3036] text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
         >
           <FaSync className={`text-lg ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -236,16 +244,27 @@ const TokensList = () => {
                     </div>
                   </div>
 
-                  {/* Fee Account Link (Bottom Right) */}
+                  {/* Fee Account Link with Twitter Profile Photo */}
                   {token.fee_account && (
                     <div className='absolute bottom-2 right-2'>
                       <Link
-                          href={`https://x.com/${token.fee_account}`}
-                          className="text-white bg-black py-1 px-2 rounded-md text-xs"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        href={`https://x.com/${token.fee_account}`}
+                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                          {token.fee_account}
+                        {getTwitterProfileImage(token.fee_account) && (
+                          <img
+                            src={getTwitterProfileImage(token.fee_account)}
+                            alt={`${token.fee_account} profile`}
+                            className="w-4 h-4 rounded-full border border-gray-600"
+                            onError={(e) => {
+                              // Hide image if it fails to load
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        )}
+                        <span>{token.fee_account}</span>
                       </Link>
                     </div>
                   )}
