@@ -16,7 +16,8 @@ const PumpTokenCreator = () => {
     image: null,
     twitter: '',
     telegram: '',
-    website: ''
+    website: '',
+    directFeesTo: ''
   });
   
   const [loading, setLoading] = useState(false);
@@ -198,7 +199,8 @@ const PumpTokenCreator = () => {
         image: null,
         twitter: '',
         telegram: '',
-        website: ''
+        website: '',
+        directFeesTo: ''
       });
       setPreviewImage('');
 
@@ -338,57 +340,64 @@ const PumpTokenCreator = () => {
           )}
 
           <div className="space-y-6">
-            <div>
-              <label className="block text-gray-400 font-semibold mb-2">Image</label>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-[#2F3036] rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-[#24252B]"
-                >
-                  {previewImage ? (
-                    <img src={previewImage} alt="Preview" className="w-20 h-20 object-cover rounded-lg" />
-                  ) : (
-                    <>
-                      <div className="w-8 h-8 border border-[#2F3036] rounded mb-2 flex items-center justify-center text-white text-sm">+</div>
-                      <span className="text-gray-500">Click to upload image</span>
-                    </>
-                  )}
-                </label>
+            {/* Image and Name/Ticker split layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Image section - left half */}
+              <div>
+                <label className="block text-gray-400 font-semibold mb-2">Image</label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="flex flex-col items-center justify-center w-full h-37 border-2 border-dashed border-[#2F3036] rounded-lg cursor-pointer hover:border-blue-400 transition-colors bg-[#24252B]"
+                  >
+                    {previewImage ? (
+                      <img src={previewImage} alt="Preview" className="w-20 h-20 object-cover rounded-lg" />
+                    ) : (
+                      <>
+                        <div className="w-8 h-8 border border-[#2F3036] rounded mb-2 md:mb-0 flex items-center justify-center text-white text-sm">+</div>
+                        <span className="text-gray-500">Click to upload image</span>
+                      </>
+                    )}
+                  </label>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-gray-400 font-semibold mb-2">Name*</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Printed"
-                required
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
+              {/* Name and Ticker stacked - right half */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-400 font-semibold mb-2">Name*</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Printed"
+                    required
+                    className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
 
-            <div>
-              <label className="block text-gray-400 font-semibold mb-2">Ticker*</label>
-              <input
-                type="text"
-                name="symbol"
-                value={formData.symbol}
-                onChange={handleInputChange}
-                placeholder="PRINT"
-                required
-                maxLength="10"
-                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
-              />
+                <div>
+                  <label className="block text-gray-400 font-semibold mb-2">Ticker*</label>
+                  <input
+                    type="text"
+                    name="symbol"
+                    value={formData.symbol}
+                    onChange={handleInputChange}
+                    placeholder="PRINT"
+                    required
+                    maxLength="10"
+                    className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
+                  />
+                </div>
+              </div>
             </div>
 
             <div>
@@ -403,6 +412,18 @@ const PumpTokenCreator = () => {
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
               <p className="text-xs text-gray-500 mt-1">{formData.description.length}/500 characters</p>
+            </div>
+
+            <div>
+              <label className="block text-gray-400 font-semibold mb-2">Fee Account</label>
+              <input
+                type="text"
+                name="directFeesTo"
+                value={formData.directFeesTo}
+                onChange={handleInputChange}
+                placeholder="Enter X account to recieve fees"
+                className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
             </div>
 
             <div>
