@@ -26,7 +26,7 @@ export default function Home() {
         <div className='grid items-center mt-[7.5%]'>
           <div className='w-full flex justify-center'>
             <Link
-              href="/token"
+              href="/create"
               className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl"
             >
               [create]
