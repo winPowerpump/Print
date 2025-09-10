@@ -1,10 +1,12 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
+import { Keypair } from '@solana/web3.js';
+import bs58 from 'bs58';
 
 const PumpTokenCreator = () => {
   const [formData, setFormData] = useState({
@@ -24,21 +26,6 @@ const PumpTokenCreator = () => {
   const [tokenData, setTokenData] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
   const [showLinks, setShowLinks] = useState(false);
-
-  // Check if we're in development mode
-  const isDevelopment = process.env.NODE_ENV === 'development' || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
-
-  // Auto-hide toast after 5 seconds
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        setSuccess(false);
-        setTokenData(null);
-      }, 5000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,8 +50,10 @@ const PumpTokenCreator = () => {
   };
 
   const createPumpToken = async () => {
-    if (!formData.name || !formData.symbol) {
-      setError('Name and symbol are required');
+    const apiKey = process.env.NEXT_PUBLIC_PUMPPORTAL_API_KEY;
+    
+    if (!apiKey) {
+      setError('PumpPortal API key not configured');
       return;
     }
 
@@ -73,37 +62,133 @@ const PumpTokenCreator = () => {
     setSuccess(false);
 
     try {
-      console.log('Starting token creation via API...');
+      console.log('Starting token creation process...');
       
-      // Prepare form data for API
-      const apiFormData = new FormData();
-      apiFormData.append('name', formData.name);
-      apiFormData.append('symbol', formData.symbol);
-      apiFormData.append('description', formData.description);
-      apiFormData.append('twitter', formData.twitter);
-      apiFormData.append('telegram', formData.telegram);
-      apiFormData.append('website', formData.website);
-      apiFormData.append('directFeesTo', formData.directFeesTo);
+      // Generate a proper Solana keypair for the token mint
+      const mintKeypair = Keypair.generate();
+      console.log('Generated mint keypair:', mintKeypair.publicKey.toString());
+      
+      // Step 1: Upload metadata to IPFS
+      const metadataFormData = new FormData();
+      metadataFormData.append('name', formData.name);
+      metadataFormData.append('symbol', formData.symbol);
+      metadataFormData.append('description', formData.description);
+      metadataFormData.append('twitter', formData.twitter || '');
+      metadataFormData.append('telegram', formData.telegram || '');
+      metadataFormData.append('website', formData.website || '');
+      metadataFormData.append('showName', 'true');
       
       if (formData.image) {
-        apiFormData.append('image', formData.image);
+        metadataFormData.append('file', formData.image);
       }
 
-      // Call API route
-      const response = await fetch('/api/tokens/create', {
+      console.log('Uploading metadata to IPFS...');
+      const metadataResponse = await fetch('https://pump.fun/api/ipfs', {
         method: 'POST',
-        body: apiFormData
+        body: metadataFormData
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || `API Error: ${response.status}`);
+      console.log('Metadata response status:', metadataResponse.status);
+      
+      if (!metadataResponse.ok) {
+        const errorText = await metadataResponse.text();
+        console.error('Metadata upload failed:', errorText);
+        throw new Error(`Failed to upload metadata to IPFS: ${metadataResponse.status} - ${errorText}`);
       }
 
-      console.log('Token creation successful:', result);
+      const metadataResult = await metadataResponse.json();
+      console.log('Metadata result:', metadataResult);
 
-      setTokenData(result.token);
+      if (!metadataResult.metadataUri) {
+        throw new Error('No metadata URI returned from IPFS upload');
+      }
+
+      // Step 2: Create the token using the correct payload format
+      const createTokenPayload = {
+        action: 'create',
+        tokenMetadata: {
+          name: formData.name,
+          symbol: formData.symbol,
+          uri: metadataResult.metadataUri
+        },
+        mint: bs58.encode(mintKeypair.secretKey), // Use secret key, not public key
+        denominatedInSol: 'true',
+        amount: 0, // 0.02 SOL initial buy
+        slippage: 10,
+        priorityFee: 0.0001,
+        pool: 'pump'
+      };
+
+      console.log('Creating token with payload:', createTokenPayload);
+
+      const createResponse = await fetch(`https://pumpportal.fun/api/trade?api-key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createTokenPayload)
+      });
+
+      console.log('Create token response status:', createResponse.status);
+
+      if (!createResponse.ok) {
+        const errorText = await createResponse.text();
+        console.error('Token creation failed:', errorText);
+        
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { message: errorText };
+        }
+
+        // Handle specific API errors
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          const errorMessages = errorData.errors.join(', ');
+          throw new Error(`API Validation Error: ${errorMessages}`);
+        }
+        
+        throw new Error(errorData.message || `Failed to create token: ${createResponse.status} - ${errorText}`);
+      }
+
+      const result = await createResponse.json();
+      console.log('Token creation result:', result);
+      console.log('Result keys:', Object.keys(result));
+      console.log('Full result object:', JSON.stringify(result, null, 2));
+
+      // Handle error responses that come back as 200 OK
+      if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+        const errorMessages = result.errors.join(', ');
+        console.error('API returned errors:', result.errors);
+        throw new Error(`API Validation Error: ${errorMessages}`);
+      }
+
+      // Check what fields are actually present
+      const hasSignature = result.signature || result.txSignature || result.transaction || result.hash;
+      const hasMint = result.mint || result.mintAddress || result.token || result.tokenAddress || mintKeypair.publicKey.toString();
+      
+      console.log('Has signature-like field:', hasSignature);
+      console.log('Has mint-like field:', hasMint);
+
+      // More flexible validation
+      if (!result || typeof result !== 'object') {
+        console.error('Invalid response type from token creation:', result);
+        throw new Error('Invalid response from token creation API - not an object');
+      }
+
+      if (Object.keys(result).length === 0) {
+        console.error('Empty response from token creation:', result);
+        throw new Error('Empty response from token creation API');
+      }
+
+      setTokenData({
+        signature: result.signature || result.txSignature || result.transaction || result.hash || 'Unknown',
+        mint: result.mint || result.mintAddress || result.token || result.tokenAddress || mintKeypair.publicKey.toString(),
+        metadataUri: metadataResult.metadataUri,
+        rawResponse: result, // Include the full response for debugging
+        ...result // Include any additional data from the response
+      });
+      
       setSuccess(true);
       
       // Clear form
@@ -127,65 +212,108 @@ const PumpTokenCreator = () => {
     }
   };
 
-  // Test function for localhost development
-  const testToast = async () => {
-    const testTokenData = {
-      signature: 'test123signature',
-      mint: 'test-mint-address',
-      metadataUri: 'https://example.com/metadata.json',
-      tokenName: 'Test Token',
-      tokenSymbol: 'TEST',
-      rawResponse: { test: 'data' }
-    };
-    
-    setTokenData(testTokenData);
-    setSuccess(true);
-  };
-
   const resetForm = () => {
     setSuccess(false);
     setError('');
     setTokenData(null);
   };
 
+  if (success) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 max-w-lg w-full text-center">
+          <div className="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">✓</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Token Created Successfully!</h2>
+          <p className="text-gray-600 mb-6">Your pump token has been deployed on Solana.</p>
+          
+          {tokenData && (
+            <div className="space-y-4 mb-6">
+              {/* Raw API Response */}
+              <div className="bg-yellow-50 rounded-lg p-4 text-left">
+                <p className="text-xs text-yellow-700 mb-2 font-semibold">Raw API Response:</p>
+                <pre className="text-xs text-yellow-800 overflow-auto max-h-32 bg-yellow-100 p-2 rounded">
+                  {JSON.stringify(tokenData.rawResponse || tokenData, null, 2)}
+                </pre>
+              </div>
+              
+              {/* Processed data */}
+              <div className="bg-blue-50 rounded-lg p-4 text-left">
+                <p className="text-xs text-blue-600 mb-2">Processed Data:</p>
+                <pre className="text-xs text-blue-700 overflow-auto">
+                  {JSON.stringify({
+                    signature: tokenData.signature,
+                    mint: tokenData.mint,
+                    metadataUri: tokenData.metadataUri
+                  }, null, 2)}
+                </pre>
+              </div>
+              
+              {tokenData.mint && tokenData.mint !== 'Unknown' && (
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <p className="text-xs text-gray-500 mb-1">Token Address:</p>
+                  <p className="text-gray-900 font-mono text-sm break-all">{tokenData.mint}</p>
+                </div>
+              )}
+              
+              {tokenData.signature && tokenData.signature !== 'Unknown' && (
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <p className="text-xs text-gray-500 mb-1">Transaction Signature:</p>
+                  <a 
+                    href={`https://solscan.io/tx/${tokenData.signature}`}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 underline font-mono text-sm break-all"
+                  >
+                    {tokenData.signature}
+                  </a>
+                </div>
+              )}
+              
+              {tokenData.mint && tokenData.mint !== 'Unknown' && (
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <p className="text-xs text-gray-500 mb-1">View on Pump.fun:</p>
+                  <a 
+                    href={`https://pump.fun/${tokenData.mint}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 underline break-all"
+                  >
+                    https://pump.fun/{tokenData.mint}
+                  </a>
+                </div>
+              )}
+
+              {tokenData.metadataUri && (
+                <div className="bg-gray-100 rounded-lg p-4">
+                  <p className="text-xs text-gray-500 mb-1">Metadata URI:</p>
+                  <a 
+                    href={tokenData.metadataUri} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 underline text-sm break-all"
+                  >
+                    {tokenData.metadataUri}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <button
+            onClick={resetForm}
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          >
+            Create Another Token
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#15161B] p-4 flex items-center">
-      {/* Success Toast */}
-      <AnimatePresence>
-        {success && tokenData && (
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
-          >
-            <div className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3">
-              <span className="font-semibold">
-                {tokenData.tokenName} ({tokenData.tokenSymbol}) created!
-              </span>
-              {tokenData.mint && tokenData.mint !== 'Unknown' && (
-                <a
-                  href={isDevelopment ? 'https://pump.fun/board' : `https://pump.fun/${tokenData.mint}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white text-green-500 px-3 py-1 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  View
-                </a>
-              )}
-              <button
-                onClick={() => setSuccess(false)}
-                className="text-white hover:text-gray-200 text-lg font-bold"
-              >
-                ×
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <div className="w-xl mx-auto">
+
         <Link
           href="/"
           className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
@@ -369,17 +497,6 @@ const PumpTokenCreator = () => {
                 'Create'
               )}
             </button>
-
-            {/* Test button for development */}
-            {isDevelopment && (
-              <button
-                type="button"
-                onClick={testToast}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mt-2"
-              >
-                Test Toast (Dev Only)
-              </button>
-            )}
           </div>
         </div>
       </div>

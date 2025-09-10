@@ -1,11 +1,12 @@
 import XVerification from './components/XVerification'
 import ProtectedContent from './components/ProtectedContent'
+import TokensList from './components/TokensList'
 import Link from 'next/link'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#15161B] py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="absolute top-0 left-[9%]">
           <img src="/print.png" className='w-[75px] h-auto' />
         </div>
@@ -13,7 +14,7 @@ export default function Home() {
         <div className='absolute top-4 right-[9%]'>
           <Link
             href="/claim"
-            className="px-4 py-2 text-gray-700 mb-2 bg-[#67D682] rounded-lg text-sm"
+            className="px-4 py-2 text-gray-900 mb-2 bg-[#67D682] rounded-lg text-sm"
           >
             claim
           </Link>
@@ -23,32 +24,45 @@ export default function Home() {
           <XVerification />
         </div>
 
-        <div className='grid items-center mt-[7.5%]'>
-          <div className='w-full flex justify-center'>
-            <Link
-              href="/create"
-              className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl"
-            >
-              [create]
-            </Link>
+        {/* Main Content */}
+        <div className='grid items-start mt-[7.5%] gap-12'>
+          {/* Hero Section */}
+          <div className='w-full'>
+            <div className='w-full flex justify-center mb-8'>
+              <Link
+                href="/create"
+                className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
+              >
+                [create]
+              </Link>
+            </div>
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-12 mx-[20%]'>
+              Direct fees to your favorite creators.
+            </div>
           </div>
-          <div className='text-center text-6xl text-balance font-bold text-white'>
-            Direct fees to your favorite creators.
+
+          {/* Tokens List Section */}
+          <div className='w-full'>
+            <TokensList />
           </div>
         </div>
         
-        <div className='absolute bottom-4 right-4'>
+        {/* Protected Content - Repositioned */}
+        <div className='fixed bottom-4 right-4 z-40'>
           <ProtectedContent>
-            <div className="bg-white rounded-xl p-8 border border-gray-200">
-              <div className="text-center mb-8">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg max-w-sm">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  Welcome, Verified User!
+                <h2 className="text-xl font-bold text-gray-900 mb-1">
+                  Verified User
                 </h2>
+                <p className="text-sm text-gray-600">
+                  Welcome back!
+                </p>
               </div>
             </div>
           </ProtectedContent>
