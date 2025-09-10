@@ -30,7 +30,7 @@ export default function Claim() {
     setError(null);
     
     try {
-      const url = `/api/tokens?page=${page}&fee_account=${user.username}`;
+      const url = `/api/tokens?page=${page}&fee_account=@${user.username}`;
       console.log('Making API call to:', url);
       
       const response = await fetch(url);
@@ -227,13 +227,6 @@ export default function Claim() {
       >
         <IoMdArrowRoundBack size={30} />
       </Link>
-
-      {/* Show X verification in top right when logged in */}
-      {user && (
-        <div className="absolute top-[3%] right-[3%] z-10">
-          <XVerification onSuccess={handleVerificationSuccess} />
-        </div>
-      )}
 
       <div className="min-h-screen flex flex-col justify-center items-center py-20">
         {!user ? (
