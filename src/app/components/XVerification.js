@@ -10,7 +10,14 @@ export default function XVerification({ onSuccess }) {
 
   // Call onSuccess when user is authenticated and is target account
   useEffect(() => {
+    console.log('Session changed:', session);
     if (session && session.user && session.user.isTargetAccount && onSuccess) {
+      console.log('Calling onSuccess with user data:', {
+        username: session.user.xUsername,
+        name: session.user.name,
+        verified: session.user.xVerified,
+        isTargetAccount: session.user.isTargetAccount
+      });
       // Pass the user data to the parent component
       onSuccess({
         username: session.user.xUsername,
@@ -69,14 +76,14 @@ export default function XVerification({ onSuccess }) {
     )
   }
 
-  // Authenticated state - if target account, don't show this UI, let parent handle it
-  if (session && session.user.isTargetAccount) {
-    // Don't render anything, let the parent component show the token list
+  // If authenticated and target account, don't render anything (let parent show token list)
+  if (session && session.user && session.user.isTargetAccount) {
+    console.log('User is target account, returning null to show token list');
     return null;
   }
 
-  // Authenticated but not target account - show the verification UI
-  if (session) {
+  // Authenticated but not target account - show access denied
+  if (session && session.user && !session.user.isTargetAccount) {
     return (
       <div className="max-w-md mx-auto bg-white rounded-xl p-6 border border-gray-200">
         <div className="text-center">
@@ -99,7 +106,7 @@ export default function XVerification({ onSuccess }) {
             </div>
           )}
           
-          {/* Access Denied for non-target accounts */}
+          {/* Access Denied */}
           <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg">
             <div className="flex items-center justify-center">
               <div className="flex-shrink-0">

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import XVerification from "../components/XVerification";
-import ProtectedContent from "../components/ProtectedContent";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
 
@@ -10,6 +9,7 @@ export default function Claim() {
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -20,21 +20,36 @@ export default function Claim() {
 
   // Function to fetch tokens for the logged-in user
   const fetchUserTokens = async (page = 1) => {
-    if (!user?.username) return;
+    if (!user?.username) {
+      console.log('No user or username available:', user);
+      return;
+    }
     
+    console.log('Fetching tokens for user:', user.username, 'page:', page);
     setLoading(true);
+    setError(null);
+    
     try {
-      const response = await fetch(`/api/tokens?page=${page}&fee_account=${user.username}`);
+      const url = `/api/tokens?page=${page}&fee_account=${user.username}`;
+      console.log('Making API call to:', url);
+      
+      const response = await fetch(url);
       const data = await response.json();
+      
+      console.log('API response status:', response.status);
+      console.log('API response data:', data);
       
       if (response.ok) {
         setTokens(data.tokens || []);
         setPagination(data.pagination || {});
+        console.log('Successfully set tokens:', data.tokens?.length || 0, 'tokens');
       } else {
         console.error('Error fetching tokens:', data.error);
+        setError(data.error || 'Failed to fetch tokens');
       }
     } catch (error) {
       console.error('Error fetching tokens:', error);
+      setError('Network error while fetching tokens');
     } finally {
       setLoading(false);
     }
@@ -42,12 +57,15 @@ export default function Claim() {
 
   // Handle successful X verification
   const handleVerificationSuccess = (userData) => {
+    console.log('Verification success, received user data:', userData);
     setUser(userData);
   };
 
   // Fetch tokens when user changes
   useEffect(() => {
+    console.log('User state changed:', user);
     if (user?.username) {
+      console.log('User has username, fetching tokens...');
       fetchUserTokens();
     }
   }, [user]);
@@ -62,16 +80,44 @@ export default function Claim() {
         <p className="text-gray-400">
           {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
         </p>
+        
+        {/* Debug info - remove this in production */}
+        <div className="mt-4 p-4 bg-gray-800 rounded text-sm text-gray-300">
+          <p><strong>Debug Info:</strong></p>
+          <p>User: {user ? JSON.stringify(user) : 'null'}</p>
+          <p>Loading: {loading.toString()}</p>
+          <p>Error: {error || 'none'}</p>
+          <p>Tokens count: {tokens.length}</p>
+        </div>
       </div>
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-900 border border-red-700 rounded-lg">
+          <p className="text-red-300">Error: {error}</p>
+          <button 
+            onClick={() => fetchUserTokens()}
+            className="mt-2 px-3 py-1 bg-red-700 text-white rounded text-sm hover:bg-red-600"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <div className="flex justify-center items-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          <p className="ml-4 text-white">Loading tokens...</p>
         </div>
       ) : tokens.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-400 text-lg">No tokens found for your account.</p>
           <p className="text-gray-500 mt-2">Create your first token to get started!</p>
+          <button 
+            onClick={() => fetchUserTokens()}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Refresh
+          </button>
         </div>
       ) : (
         <>
@@ -170,6 +216,8 @@ export default function Claim() {
       )}
     </div>
   );
+
+  console.log('Rendering Claim component. User:', user);
 
   return (
     <div className="min-h-screen bg-[#15161B]">
