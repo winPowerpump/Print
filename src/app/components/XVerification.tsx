@@ -1,12 +1,25 @@
 'use client'
 
 import { signIn, signOut, useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-export default function XVerification() {
+export default function XVerification({ onSuccess }) {
   const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
+
+  // Call onSuccess when user is authenticated and is target account
+  useEffect(() => {
+    if (session && session.user && session.user.isTargetAccount && onSuccess) {
+      // Pass the user data to the parent component
+      onSuccess({
+        username: session.user.xUsername,
+        name: session.user.name,
+        verified: session.user.xVerified,
+        isTargetAccount: session.user.isTargetAccount
+      })
+    }
+  }, [session, onSuccess])
 
   const handleSignIn = async () => {
     setIsLoading(true)
@@ -48,7 +61,7 @@ export default function XVerification() {
             <div className="loading-spinner mr-3"></div>
             Loading
             <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.80l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </button>
         </div>
@@ -88,6 +101,9 @@ export default function XVerification() {
                   <h4 className="text-lg font-semibold text-green-800">
                     ✅ Account Verified!
                   </h4>
+                  <p className="text-sm text-green-700 mt-1">
+                    Loading your tokens...
+                  </p>
                 </div>
               </div>
             </div>
@@ -149,7 +165,7 @@ export default function XVerification() {
             <>
               Claim
               <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.80l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
               </svg>
             </>
           )}
