@@ -12,7 +12,7 @@ export default function XVerification() {
     setIsLoading(true)
     try {
       await signIn('twitter', { 
-        callbackUrl: '/',
+        callbackUrl: '/claim',
         redirect: true 
       })
     } catch (error) {
@@ -26,7 +26,7 @@ export default function XVerification() {
     setIsLoading(true)
     try {
       await signOut({ 
-        callbackUrl: '/',
+        callbackUrl: '/claim',
         redirect: true 
       })
     } catch (error) {
