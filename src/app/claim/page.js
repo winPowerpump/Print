@@ -104,7 +104,7 @@ export default function Claim() {
         {/* User info and Sign Out Button */}
         <div className="flex items-center space-x-4">
           {/* User info display */}
-          <div className="hidden sm:flex items-center space-x-3 bg-[#1E1F26] rounded-lg px-4 py-2 border border-gray-700">
+          <div className="hidden sm:flex items-center space-x-3 bg-black rounded-lg px-4 py-2">
             <div className="relative">
               <img
                 src={`https://unavatar.io/twitter/${user?.username}`}
@@ -140,7 +140,7 @@ export default function Claim() {
           <button
             onClick={handleSignOut}
             disabled={signOutLoading}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center space-x-2"
+            className="px-4 py-2 text-gray-500 hover:text-gray-700 disabled:cursor-not-allowed text-sm font-medium flex items-center space-x-2"
           >
             {signOutLoading ? (
               <>
