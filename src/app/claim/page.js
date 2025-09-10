@@ -173,8 +173,7 @@ export default function Claim() {
 
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-          <p className="ml-4 text-white">Loading tokens...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
         </div>
       ) : tokens.length === 0 ? (
         <div className="text-center py-12">
