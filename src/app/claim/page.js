@@ -232,7 +232,12 @@ export default function Claim() {
         {!user ? (
           <XVerification onSuccess={handleVerificationSuccess} />
         ) : (
-          <TokenList />
+          <div className=''>
+            <div className='absolute top-4 right-4'>
+              <XVerification onSuccess={handleVerificationSuccess} />
+            </div>
+            <TokenList />
+          </div>
         )}
       </div>
     </div>
