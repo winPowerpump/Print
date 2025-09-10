@@ -30,7 +30,7 @@ export default function Claim() {
     setError(null);
     
     try {
-      const url = `/api/tokens?page=${page}&fee_account=${user.username}`;
+      const url = `/api/tokens?page=${page}&fee_account=@${user.username}`;
       console.log('Making API call to:', url);
       
       const response = await fetch(url);
