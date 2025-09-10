@@ -76,6 +76,8 @@ export async function POST(request) {
 
     const metadataResult = await metadataResponse.json();
     console.log('Metadata result:', metadataResult);
+    console.log('Metadata result keys:', Object.keys(metadataResult));
+    console.log('Image field from metadata:', metadataResult.image);
 
     if (!metadataResult.metadataUri) {
       throw new Error('No metadata URI returned from IPFS upload');
@@ -145,6 +147,23 @@ export async function POST(request) {
     }
 
     // Prepare token info for database
+    let imageUri = metadataResult.image || null;
+    
+    // If image not directly in response, try to fetch from metadataUri
+    if (!imageUri && metadataResult.metadataUri) {
+      try {
+        console.log('Fetching metadata from URI to get image:', metadataResult.metadataUri);
+        const metadataFetch = await fetch(metadataResult.metadataUri);
+        if (metadataFetch.ok) {
+          const metadataFromUri = await metadataFetch.json();
+          console.log('Metadata from URI:', metadataFromUri);
+          imageUri = metadataFromUri.image || null;
+        }
+      } catch (error) {
+        console.warn('Failed to fetch metadata from URI:', error.message);
+      }
+    }
+    
     const tokenInfo = {
       name: tokenData.name,
       symbol: tokenData.symbol,
@@ -152,6 +171,7 @@ export async function POST(request) {
       mint_address: result.mint || result.mintAddress || result.token || result.tokenAddress || mintKeypair.publicKey.toString(),
       transaction_signature: result.signature || result.txSignature || result.transaction || result.hash || 'Unknown',
       metadata_uri: metadataResult.metadataUri,
+      image_uri: imageUri,
       fee_account: tokenData.directFeesTo || null,
       twitter_url: tokenData.twitter || null,
       telegram_url: tokenData.telegram || null,
@@ -160,6 +180,9 @@ export async function POST(request) {
       raw_response: result,
       creator_ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     };
+
+    console.log('Token info being saved:', tokenInfo);
+    console.log('Image URI being saved:', tokenInfo.image_uri);
 
     // Save to Supabase
     console.log('Saving token to Supabase:', tokenInfo);
@@ -185,6 +208,7 @@ export async function POST(request) {
         signature: tokenInfo.transaction_signature,
         mint: tokenInfo.mint_address,
         metadataUri: tokenInfo.metadata_uri,
+        imageUri: tokenInfo.image_uri, // Include image URI in response
         tokenName: tokenInfo.name,
         tokenSymbol: tokenInfo.symbol,
         rawResponse: result,

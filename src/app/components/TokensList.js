@@ -148,7 +148,7 @@ const TokensList = () => {
       {/* Tokens List */}
       <div className="space-y-4">
         <AnimatePresence>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[12.5%]'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[5%] xl:mx-[10%]'>
           {tokens.map((token) => (
             <motion.div
               key={token.id}
@@ -159,71 +159,98 @@ const TokensList = () => {
                 isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
               }`}
             >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  {/* Token Info */}
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-white">
-                      {token.name} ({token.symbol})
-                    </h3>
-                    <span className="px-1.5 py-[3px] rounded-full text-[10px] font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036]">
-                      {token.status}
-                    </span>
-                    {isTestToken(token) && (
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        TEST
+              <div className="flex items-start gap-4">
+                {/* Token Image - Left Side */}
+                <div className="flex-shrink-0">
+                  {token.image_uri ? (
+                    <img
+                      src={token.image_uri}
+                      alt={`${token.name} logo`}
+                      className="size-32 rounded-lg object-cover bg-[#24252B] border border-[#2F3036]"
+                      onError={(e) => {
+                        // Fallback to placeholder if image fails to load
+                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iIzI0MjUyQiIvPgo8cGF0aCBkPSJNMzIgMjBMMzggMzJIMjZMMzIgMjBaIiBmaWxsPSIjNkI3MjgwIi8+CjxwYXRoIGQ9Ik0zMiA0NEwyNiAzMkgzOEwzMiA0NFoiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+';
+                      }}
+                    />
+                  ) : (
+                    // Placeholder when no image
+                    <div className="size-32 rounded-lg bg-[#24252B] border border-[#2F3036] flex items-center justify-center">
+                      <div className="text-gray-500 text-xs font-mono">
+                        {token.symbol ? token.symbol.slice(0, 3).toUpperCase() : '?'}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Token Info - Right Side */}
+                <div className="flex-1 min-w-0">
+                  {/* Top Row: Name, Symbol, Status */}
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-lg font-bold text-white truncate">
+                          {token.name}
+                        </h3>
+                        <span className="text-sm text-gray-400">
+                          ({token.symbol})
+                        </span>
+                        {isTestToken(token) && (
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            TEST
+                          </span>
+                        )}
+                      </div>
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036] hidden">
+                        {token.status}
                       </span>
+                    </div>
+
+                    {/* Pump.fun Link */}
+                    {token.mint_address && !isTestToken(token) && (
+                      <a
+                        href={`https://pump.fun/${token.mint_address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0"
+                      >
+                        <img src="/pill.png" className='w-7 h-7'/>
+                      </a>
                     )}
                   </div>
 
                   {/* Description */}
                   {token.description && (
-                    <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                    <p className="text-gray-400 text-sm mb-2 line-clamp-2">
                       {token.description}
                     </p>
                   )}
 
-                  {/* Details Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                    <div>
-                        <div className="text-gray-300 font-mono text-xs break-all">
-                            {token.mint_address
-                            ? `${token.mint_address.slice(0, 3)}...${token.mint_address.slice(-4)}`
-                            : ""}
+                  {/* Bottom Row: Contract Address */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      {token.mint_address && (
+                        <div className="text-gray-300 font-mono text-xs truncate">
+                          {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
                         </div>
+                      )}
                     </div>
-
-                    {token.fee_account && (
-                      <div className='absolute bottom-4 right-2'>
-                        <Link
-                            href={`https://x.com/${token.fee_account}`}
-                            className="text-white bg-black py-2 px-3 rounded-md"
-                            target="_blank" // optional: open in new tab
-                            rel="noopener noreferrer" // optional: security best practice
-                        >
-                            {token.fee_account}
-                        </Link>
-                      </div>
-                    )}
-
                   </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex flex-col gap-2 ml-4">
-                  {/* Pump.fun Link */}
-                  {token.mint_address && !isTestToken(token) && (
-                    <a
-                      href={`https://pump.fun/${token.mint_address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white px-2 py-1 rounded text-sm font-medium flex items-center gap-1 -mr-2"
-                    >
-                      <img src="/pill.png" className='size-7'/>
-                    </a>
+                  {/* Fee Account Link (Bottom Right) */}
+                  {token.fee_account && (
+                    <div className='absolute bottom-2 right-2'>
+                      <Link
+                          href={`https://x.com/${token.fee_account}`}
+                          className="text-white bg-black py-1 px-2 rounded-md text-xs"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                      >
+                          {token.fee_account}
+                      </Link>
+                    </div>
                   )}
 
-                  {/* Social Links */}
+                  {/* Hidden Social Links */}
                   <div className="gap-1 hidden">
                     {token.twitter_url && (
                       <a
