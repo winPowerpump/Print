@@ -339,9 +339,9 @@ const PumpTokenCreator = () => {
             </div>
           )}
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Image and Name/Ticker split layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Image section - left half */}
               <div>
                 <label className="block text-gray-400 font-semibold mb-2">Image</label>
