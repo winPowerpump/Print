@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter } from 'react-icons/fa';
+import Link from 'next/link';
 
 const TokensList = () => {
   const [tokens, setTokens] = useState([]);
@@ -105,20 +106,21 @@ const TokensList = () => {
 
   return (
     <div>
-
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Search */}
-        <div className="relative">
+      {/* Search */}
+      <div className="relative">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
           <input
             type="text"
             placeholder="Search tokens..."
             value={filters.search}
             onChange={(e) => handleFilterChange('search', e.target.value)}
-            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            className="w-[60%] bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500"
           />
-        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 mt-4">
+
 
         {/* Status Filter */}
         <div className="relative">
@@ -162,7 +164,7 @@ const TokensList = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className={`bg-[#24252B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-[45%] ${
+              className={`bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-[45%] ${
                 isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
               }`}
             >
@@ -173,7 +175,7 @@ const TokensList = () => {
                     <h3 className="text-lg font-bold text-white">
                       {token.name} ({token.symbol})
                     </h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(token.status)}`}>
+                    <span className="px-1.5 py-[3px] rounded-full text-[10px] font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036]">
                       {token.status}
                     </span>
                     {isTestToken(token) && (
@@ -208,10 +210,14 @@ const TokensList = () => {
 
                     {token.fee_account && (
                       <div>
-                        <span className="text-gray-500">Fee Account:</span>
-                        <div className="text-gray-300">
-                          {token.fee_account}
-                        </div>
+                        <Link
+                            href={`https://x.com/${token.fee_account}`}
+                            className="text-white bg-black py-2 px-3 rounded-md"
+                            target="_blank" // optional: open in new tab
+                            rel="noopener noreferrer" // optional: security best practice
+                        >
+                            {token.fee_account}
+                        </Link>
                       </div>
                     )}
 
@@ -240,9 +246,9 @@ const TokensList = () => {
                       href={`https://pump.fun/${token.mint_address}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium flex items-center gap-1 transition-colors"
+                      className="text-white px-2 py-1 rounded text-sm font-medium flex items-center gap-1 -mr-2"
                     >
-                      View <FaExternalLinkAlt className="text-xs" />
+                      <img src="/pill.png" className='size-7'/>
                     </a>
                   )}
 
