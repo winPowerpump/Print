@@ -184,9 +184,7 @@ export default function Claim() {
         {!user ? (
           <XVerification onSuccess={handleVerificationSuccess} />
         ) : (
-          <ProtectedContent>
-            <TokenList />
-          </ProtectedContent>
+          <TokenList />
         )}
       </div>
     </div>
