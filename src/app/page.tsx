@@ -28,7 +28,7 @@ export default function Home() {
         <div className='grid items-start mt-[7.5%] gap-12'>
           {/* Hero Section */}
           <div className='w-full'>
-            <div className='w-full flex justify-center mb-8'>
+            <div className='w-full flex justify-center mb-2'>
               <Link
                 href="/create"
                 className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
