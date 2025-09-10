@@ -102,9 +102,9 @@ export default function Claim() {
         </div>
         
         {/* User info and Sign Out Button */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           {/* User info display */}
-          <div className="hidden sm:flex items-center space-x-1 bg-black rounded-lg px-3 py-1.5">
+          <div className="hidden sm:flex items-center space-x-2 bg-black rounded-lg px-3 py-1.5">
             <div className="relative">
               <img
                 src={`https://unavatar.io/twitter/${user?.username}`}
