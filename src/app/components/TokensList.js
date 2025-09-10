@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync } from 'react-icons/fa';
 import Link from 'next/link';
 
 const TokensList = () => {
@@ -139,9 +139,9 @@ const TokensList = () => {
         <button
           onClick={fetchTokens}
           disabled={loading}
-          className="w-[10%] bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="w-[5%] bg-[#15161B] border border-[#2F3036] text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
         >
-          {loading ? 'Loading...' : 'Refresh'}
+          <FaSync className={`text-lg ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
@@ -159,9 +159,9 @@ const TokensList = () => {
           {tokens.map((token) => (
             <motion.div
               key={token.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 0 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              exit={{ opacity: 0, y: 0 }}
               className={`relative bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-full ${
                 isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
               }`}
