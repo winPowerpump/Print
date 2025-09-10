@@ -11,7 +11,7 @@ export default function Home() {
           <img src="/print.png" className='w-[75px] h-auto' />
         </div>
 
-        <div className='absolute top-4 -translate-x-1/2 left-1/2'>
+        <div className='absolute top-4 -translate-x-1/2 left-1/2 hidden'>
           <div className='flex justify-center space-x-2'>
             <div className='bg-[#FDF355] w-44 p-4'>
 
