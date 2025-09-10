@@ -31,9 +31,6 @@ export default function Home() {
           </Link>
         </div>
         
-        <div className="absolute bottom-4 left-4 hidden">
-          <XVerification />
-        </div>
 
         {/* Main Content */}
         <div className='grid items-start mt-[7.5%] md:mt-[5%] gap-2'>
