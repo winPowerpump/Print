@@ -195,18 +195,20 @@ const TokensList = () => {
                   {/* Top Row: Name, Symbol, Status */}
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-bold text-white truncate">
-                          {token.name}
-                        </h3>
-                        <span className="text-sm text-gray-400">
+                      <div className="mb-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-bold text-white truncate">
+                            {token.name}
+                          </h3>
+                          {isTestToken(token) && (
+                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              TEST
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-400">
                           ({token.symbol})
-                        </span>
-                        {isTestToken(token) && (
-                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            TEST
-                          </span>
-                        )}
+                        </div>
                       </div>
                       <span className="px-2 py-1 rounded-full text-xs font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036] hidden">
                         {token.status}
@@ -249,7 +251,7 @@ const TokensList = () => {
                     <div className='absolute bottom-2 right-2'>
                       <Link
                         href={`https://x.com/${token.fee_account}`}
-                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
+                        className="flex items-center gap-2 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
