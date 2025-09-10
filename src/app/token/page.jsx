@@ -459,7 +459,7 @@ const PumpTokenCreator = () => {
                             name="twitter"
                             value={formData.twitter}
                             onChange={handleInputChange}
-                            placeholder="https://twitter.com/..."
+                            placeholder="https://x.com/..."
                             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
                         </div>
