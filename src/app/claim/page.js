@@ -102,7 +102,7 @@ export default function Claim() {
         </div>
         
         {/* User info and Sign Out Button */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
           {/* User info display */}
           <div className="hidden sm:flex items-center space-x-2 bg-black rounded-lg px-3 py-1.5">
             <div className="relative">
