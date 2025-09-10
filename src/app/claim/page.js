@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { signOut } from 'next-auth/react'; // Add this import
 import XVerification from "../components/XVerification";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
@@ -10,6 +11,7 @@ export default function Claim() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const [signOutLoading, setSignOutLoading] = useState(false); // Add loading state for sign out
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -61,6 +63,21 @@ export default function Claim() {
     setUser(userData);
   };
 
+  // Handle sign out
+  const handleSignOut = async () => {
+    setSignOutLoading(true);
+    try {
+      await signOut({ 
+        callbackUrl: '/claim',
+        redirect: true 
+      });
+    } catch (error) {
+      console.error('Sign out error:', error);
+    } finally {
+      setSignOutLoading(false);
+    }
+  };
+
   // Fetch tokens when user changes
   useEffect(() => {
     console.log('User state changed:', user);
@@ -70,16 +87,61 @@ export default function Claim() {
     }
   }, [user]);
 
-  // Token list component
+  // Token list component with sign out button
   const TokenList = () => (
     <div className="w-full max-w-6xl mx-auto px-4">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">
-          Your Tokens (@{user?.username})
-        </h2>
-        <p className="text-gray-400">
-          {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
-        </p>
+      {/* Header with user info and sign out button */}
+      <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Your Tokens (@{user?.username})
+          </h2>
+          <p className="text-gray-400">
+            {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
+          </p>
+        </div>
+        
+        {/* User info and Sign Out Button */}
+        <div className="flex items-center space-x-4">
+          {/* User info display */}
+          <div className="hidden sm:flex items-center space-x-3 bg-[#1E1F26] rounded-lg px-4 py-2 border border-gray-700">
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">
+                {user?.name?.charAt(0) || user?.username?.charAt(0)}
+              </span>
+            </div>
+            <div>
+              <p className="text-white text-sm font-medium">{user?.name}</p>
+              <p className="text-gray-400 text-xs">@{user?.username}</p>
+            </div>
+            {user?.verified && (
+              <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            )}
+          </div>
+
+          {/* Sign Out Button */}
+          <button
+            onClick={handleSignOut}
+            disabled={signOutLoading}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center space-x-2"
+          >
+            {signOutLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Signing out...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Sign Out</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {error && (
