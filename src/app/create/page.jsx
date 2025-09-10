@@ -279,7 +279,7 @@ const PumpTokenCreator = () => {
                 value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Tell the world about your token..."
-                rows={2}
+                rows={1}
                 maxLength="500"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
               />
