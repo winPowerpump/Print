@@ -20,7 +20,7 @@ export default function Home() {
           </Link>
         </div>
         
-        <div className="absolute bottom-4 left-4">
+        <div className="absolute bottom-4 left-4 hidden">
           <XVerification />
         </div>
 
@@ -48,7 +48,7 @@ export default function Home() {
         </div>
         
         {/* Protected Content - Repositioned */}
-        <div className='fixed bottom-4 right-4 z-40'>
+        <div className='fixed bottom-4 right-4 z-40 hidden'>
           <ProtectedContent>
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg max-w-sm">
               <div className="text-center">
