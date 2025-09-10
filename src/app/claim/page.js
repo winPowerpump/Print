@@ -105,10 +105,25 @@ export default function Claim() {
         <div className="flex items-center space-x-4">
           {/* User info display */}
           <div className="hidden sm:flex items-center space-x-3 bg-[#1E1F26] rounded-lg px-4 py-2 border border-gray-700">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">
-                {user?.name?.charAt(0) || user?.username?.charAt(0)}
-              </span>
+            <div className="relative">
+              <img
+                src={`https://unavatar.io/twitter/${user?.username}`}
+                alt={`${user?.name || user?.username} profile picture`}
+                className="w-8 h-8 rounded-full"
+                onError={(e) => {
+                  // Fallback to initials if image fails to load
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div 
+                className="w-8 h-8 bg-blue-600 rounded-full items-center justify-center absolute top-0 left-0" 
+                style={{ display: 'none' }}
+              >
+                <span className="text-white font-bold text-sm">
+                  {user?.name?.charAt(0) || user?.username?.charAt(0)}
+                </span>
+              </div>
             </div>
             <div>
               <p className="text-white text-sm font-medium">{user?.name}</p>
