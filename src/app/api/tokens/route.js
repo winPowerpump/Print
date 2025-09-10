@@ -14,6 +14,7 @@ export async function GET(request) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const status = searchParams.get('status');
     const search = searchParams.get('search');
+    const feeAccount = searchParams.get('fee_account'); // Filter by X username
     
     const offset = (page - 1) * limit;
 
@@ -24,7 +25,12 @@ export async function GET(request) {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    // Add filters
+    // Add fee_account filter for logged-in user
+    if (feeAccount) {
+      query = query.eq('fee_account', feeAccount);
+    }
+
+    // Add other filters
     if (status && status !== 'all') {
       query = query.eq('status', status);
     }
