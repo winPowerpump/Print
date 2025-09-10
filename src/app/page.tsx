@@ -25,7 +25,7 @@ export default function Home() {
         </div>
 
         {/* Main Content */}
-        <div className='grid items-start mt-[7.5%] gap-2'>
+        <div className='grid items-start mt-[7.5%] md:mt-[5%] gap-2'>
           {/* Hero Section */}
           <div className='w-full'>
             <div className='w-full flex justify-center mb-2'>
@@ -36,7 +36,7 @@ export default function Home() {
                 [create]
               </Link>
             </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-12 mx-[20%]'>
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-6 mx-[20%]'>
               Direct fees to your favorite creators.
             </div>
           </div>

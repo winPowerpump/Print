@@ -155,14 +155,14 @@ const TokensList = () => {
       {/* Tokens List */}
       <div className="space-y-4">
         <AnimatePresence>
-        <div className='flex justify-center gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[12.5%]'>
           {tokens.map((token) => (
             <motion.div
               key={token.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className={`bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-[45%] ${
+              className={`relative bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-full ${
                 isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
               }`}
             >
@@ -193,21 +193,15 @@ const TokensList = () => {
                   {/* Details Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                     <div>
-                      <span className="text-gray-500">Mint Address:</span>
-                      <div className="text-gray-300 font-mono text-xs break-all">
-                        {token.mint_address}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <span className="text-gray-500">Created:</span>
-                      <div className="text-gray-300">
-                        {formatDate(token.created_at)}
-                      </div>
+                        <div className="text-gray-300 font-mono text-xs break-all">
+                            {token.mint_address
+                            ? `${token.mint_address.slice(0, 3)}...${token.mint_address.slice(-4)}`
+                            : ""}
+                        </div>
                     </div>
 
                     {token.fee_account && (
-                      <div>
+                      <div className='absolute bottom-4 right-2'>
                         <Link
                             href={`https://x.com/${token.fee_account}`}
                             className="text-white bg-black py-2 px-3 rounded-md"
@@ -219,20 +213,6 @@ const TokensList = () => {
                       </div>
                     )}
 
-                    {token.transaction_signature && token.transaction_signature !== 'Unknown' && (
-                      <div>
-                        <span className="text-gray-500">Transaction:</span>
-                        <a
-                          href={`https://solscan.io/tx/${token.transaction_signature}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-400 hover:text-blue-300 font-mono text-xs break-all flex items-center gap-1"
-                        >
-                          {token.transaction_signature.slice(0, 20)}...
-                          <FaExternalLinkAlt className="text-xs" />
-                        </a>
-                      </div>
-                    )}
                   </div>
                 </div>
 
