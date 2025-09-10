@@ -9,8 +9,17 @@ export default function Home() {
         <div className="absolute top-0 left-[9%]">
           <img src="/print.png" className='w-[75px] h-auto' />
         </div>
+
+        <div className='absolute top-4 right-[9%]'>
+          <Link
+            href="/claim"
+            className="px-4 py-2 text-gray-700 mb-2 bg-[#67D682] rounded-lg text-sm"
+          >
+            claim
+          </Link>
+        </div>
         
-        <div className="absolute top-4 right-[9%]">
+        <div className="absolute bottom-4 left-4">
           <XVerification />
         </div>
 
