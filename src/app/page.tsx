@@ -25,7 +25,7 @@ export default function Home() {
         </div>
 
         {/* Main Content */}
-        <div className='grid items-start mt-[7.5%] gap-12'>
+        <div className='grid items-start mt-[7.5%] gap-2'>
           {/* Hero Section */}
           <div className='w-full'>
             <div className='w-full flex justify-center mb-2'>

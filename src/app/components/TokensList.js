@@ -106,42 +106,40 @@ const TokensList = () => {
 
   return (
     <div>
-      {/* Search */}
-      <div className="relative">
+      {/* Search and Filters - Single Line */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        {/* Search - 80% */}
+        <div className="relative w-[40%]">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
           <input
             type="text"
             placeholder="Search tokens..."
             value={filters.search}
             onChange={(e) => handleFilterChange('search', e.target.value)}
-            className="w-[60%] bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 placeholder-gray-500 focus:outline-none focus:border-blue-500"
           />
-      </div>
+        </div>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 mt-4">
-
-
-        {/* Status Filter */}
-        <div className="relative">
+        {/* Status Filter - 10% */}
+        <div className="relative w-[10%]">
           <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange('status', e.target.value)}
             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 focus:outline-none focus:border-blue-500 appearance-none"
           >
-            <option value="all">All Status</option>
+            <option value="all">All</option>
             <option value="created">Created</option>
             <option value="pending">Pending</option>
             <option value="failed">Failed</option>
           </select>
         </div>
 
-        {/* Refresh Button */}
+        {/* Refresh Button - 10% */}
         <button
           onClick={fetchTokens}
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="w-[10%] bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           {loading ? 'Loading...' : 'Refresh'}
         </button>
