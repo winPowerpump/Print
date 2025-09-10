@@ -231,7 +231,7 @@ const TokensList = () => {
                   )}
 
                   {/* Social Links */}
-                  <div className="flex gap-1">
+                  <div className="gap-1 hidden">
                     {token.twitter_url && (
                       <a
                         href={token.twitter_url}
