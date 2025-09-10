@@ -31,7 +31,7 @@ export default function Home() {
           </Link>
         </div>
         
-        <div className="absolute bottom-4 left-4">
+        <div className="absolute bottom-4 left-4 hidden">
           <XVerification />
         </div>
 
