@@ -251,7 +251,7 @@ const TokensList = () => {
                     <div className='absolute bottom-2 right-2'>
                       <Link
                         href={`https://x.com/${token.fee_account}`}
-                        className="flex items-center gap-2 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
+                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
