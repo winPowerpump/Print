@@ -234,7 +234,7 @@ const PumpTokenCreator = () => {
                     ) : (
                       <>
                         <div className="w-8 h-8 border border-[#2F3036] rounded mb-2 md:mb-0 flex items-center justify-center text-white text-sm">+</div>
-                        <span className="text-gray-500">Click to upload image</span>
+                        <span className="text-gray-500">Click to upload</span>
                       </>
                     )}
                   </label>
