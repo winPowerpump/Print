@@ -69,7 +69,13 @@ export default function XVerification({ onSuccess }) {
     )
   }
 
-  // Authenticated state
+  // Authenticated state - if target account, don't show this UI, let parent handle it
+  if (session && session.user.isTargetAccount) {
+    // Don't render anything, let the parent component show the token list
+    return null;
+  }
+
+  // Authenticated but not target account - show the verification UI
   if (session) {
     return (
       <div className="max-w-md mx-auto bg-white rounded-xl p-6 border border-gray-200">
@@ -93,39 +99,24 @@ export default function XVerification({ onSuccess }) {
             </div>
           )}
           
-          {/* Target Account Status */}
-          {session.user.isTargetAccount ? (
-            <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-              <div className="flex items-center justify-center">
-                <div className="ml-3">
-                  <h4 className="text-lg font-semibold text-green-800">
-                    ✅ Account Verified!
-                  </h4>
-                  <p className="text-sm text-green-700 mt-1">
-                    Loading your tokens...
-                  </p>
-                </div>
+          {/* Access Denied for non-target accounts */}
+          <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg">
+            <div className="flex items-center justify-center">
+              <div className="flex-shrink-0">
+                <svg className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h4 className="text-lg font-semibold text-red-800">
+                  ❌ Access Denied
+                </h4>
+                <p className="text-sm text-red-700">
+                  This is not the target account. Please sign in with the correct X account.
+                </p>
               </div>
             </div>
-          ) : (
-            <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg">
-              <div className="flex items-center justify-center">
-                <div className="flex-shrink-0">
-                  <svg className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <h4 className="text-lg font-semibold text-red-800">
-                    ❌ Access Denied
-                  </h4>
-                  <p className="text-sm text-red-700">
-                    This is not the target account. Please sign in with the correct X account.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
           
           {/* Sign Out Button */}
           <button
