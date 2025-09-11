@@ -290,7 +290,7 @@ export default function Claim() {
     <div className="min-h-screen bg-[#15161B]">
       <Link
         href="/"
-        className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500 hover:text-gray-300 transition-colors z-10"
+        className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500 z-10"
       >
         <IoMdArrowRoundBack size={30} />
       </Link>
