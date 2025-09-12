@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync, FaVolumeUp } from 'react-icons/fa';
+import { HiSpeakerphone } from "react-icons/hi";
 import Link from 'next/link';
 
 const TokensList = () => {
@@ -58,6 +59,23 @@ const TokensList = () => {
       console.error('Failed to copy address:', error);
     }
   };
+
+  // Generate tweet intent URL
+  const generateTweetIntent = (token) => {
+    const message = `People just made a token for you`;
+    const url = token.mint_address ? `https://pump.fun/${token.mint_address}` : '';
+
+    // Append @handle at the end of the message
+    const handle = token.fee_account ? ` @${token.fee_account.replace('@', '')}` : '';
+
+    const tweetParams = new URLSearchParams({
+      text: `${message}${handle}`,
+      url: url
+    });
+
+    return `https://twitter.com/intent/tweet?${tweetParams.toString()}`;
+  };
+
 
   // Fetch tokens when filters change
   useEffect(() => {
@@ -329,27 +347,41 @@ const TokensList = () => {
                           </div>
                         )}
                         
-                        {/* Fee Account Link with Twitter Profile Photo */}
+                        {/* Tweet Intent Button and Fee Account Link with Twitter Profile Photo */}
                         {token.fee_account && (
-                          <Link
-                            href={`https://x.com/${token.fee_account}`}
-                            className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-sm hover:bg-gray-800 transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {getTwitterProfileImage(token.fee_account) && (
-                              <img
-                                src={getTwitterProfileImage(token.fee_account)}
-                                alt={`${token.fee_account} profile`}
-                                className="size-5 rounded-full border border-gray-600" 
-                                onError={(e) => {
-                                  // Hide image if it fails to load
-                                  e.target.style.display = 'none';
-                                }}
-                              />
-                            )}
-                            <span>{token.fee_account}</span>
-                          </Link>
+                          <div className="flex items-center gap-1">
+                            {/* Tweet Intent Button with Speaker Icon */}
+                            <a
+                              href={generateTweetIntent(token)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center text-white py-1 px-1"
+                              title="Tweet about this token"
+                            >
+                              <HiSpeakerphone className='text-sm'/>
+                            </a>
+                            
+                            {/* Fee Account Link */}
+                            <Link
+                              href={`https://x.com/${token.fee_account}`}
+                              className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-sm hover:bg-gray-800 transition-colors"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {getTwitterProfileImage(token.fee_account) && (
+                                <img
+                                  src={getTwitterProfileImage(token.fee_account)}
+                                  alt={`${token.fee_account} profile`}
+                                  className="size-5 rounded-full border border-gray-600" 
+                                  onError={(e) => {
+                                    // Hide image if it fails to load
+                                    e.target.style.display = 'none';
+                                  }}
+                                />
+                              )}
+                              <span>{token.fee_account}</span>
+                            </Link>
+                          </div>
                         )}
                       </div>
 
