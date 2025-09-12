@@ -146,7 +146,7 @@ function SignInContent() {
         <div className="text-center">
           <button
             onClick={() => router.push('/')}
-            className="text-gray-600 hover:text-gray-900 transition duration-200 flex justify-center items-center space-x-1 cursor-pointer"
+            className="text-gray-600 flex justify-center items-center space-x-1 cursor-pointer"
           >
             <IoMdArrowRoundBack size={20} /> Back to home
           </button>
