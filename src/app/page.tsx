@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion'
 import XVerification from './components/XVerification'
 import ProtectedContent from './components/ProtectedContent'
 import TokensList from './components/TokensList'
@@ -37,12 +40,23 @@ export default function Home() {
           {/* Hero Section */}
           <div className='w-full'>
             <div className='w-full flex justify-center mb-2'>
-              <Link
-                href="/create"
-                className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                [create]
-              </Link>
+                <Link
+                  href="/create"
+                  className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
+                >
+                  [create]
+                </Link>
+              </motion.div>
             </div>
             <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[20%]'>
               Launch for your favorite creators.
