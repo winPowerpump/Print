@@ -479,7 +479,7 @@ export default function Claim() {
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
-                    <p className="text-gray-500 text-xs mt-1">
+                    <p className="text-gray-500 text-xs mt-1 hidden">
                       Created: {new Date(token.created_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -490,7 +490,7 @@ export default function Claim() {
                   <button
                     onClick={() => handleExport(token)}
                     disabled={exportingTokens.has(token.id)}
-                    className="px-6 py-2 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 hover:bg-[#5bc474] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                    className="px-3 py-1 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 hover:bg-[#5bc474] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
                   >
                     {exportingTokens.has(token.id) ? (
                       <>
