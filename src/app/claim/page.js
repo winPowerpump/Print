@@ -284,7 +284,7 @@ export default function Claim() {
                 {/* Right side - Claim button */}
                 <button
                   onClick={() => handleClaim(token)}
-                  className="px-6 py-2 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0"
+                  className="px-6 py-2 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 mt-2"
                 >
                   claim
                 </button>
