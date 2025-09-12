@@ -39,13 +39,13 @@ export default function Home() {
         <div className='grid items-start mt-[7.5%] md:mt-[5%] gap-2'>
           {/* Hero Section */}
           <div className='w-full'>
-            <div className='w-full flex justify-center mb-2'>
+            <div className='w-full flex justify-center mb-1'>
               <motion.div
                 animate={{ 
                   scale: [1, 1.05, 1],
                 }}
                 transition={{
-                  duration: 1.5,
+                  duration: 1,
                   repeat: Infinity,
                   ease: "easeInOut",
                   repeatType: "reverse"
