@@ -124,7 +124,7 @@ export default function Home() {
             <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[20%] whitespace-nowrap'>
               Launch for your
             </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[10%] -translate-x-[5.25%]'>
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[10%] -translate-x-[5.75%]'>
               favorite <AnimatedWord />
             </div>
             <div className='text-center text-sm md:text-base text-balance text-gray-300 mb-4 mx-[20%]'>
