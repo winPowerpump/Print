@@ -117,19 +117,58 @@ const TokensList = () => {
     return `https://unavatar.io/twitter/${cleanUsername}`;
   };
 
-  if (loading && tokens.length === 0) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
+  // Skeleton token component
+  const SkeletonToken = () => (
+    <div className="relative bg-[#15161B] border border-[#2F3036] rounded-lg p-4 w-full animate-pulse">
+      <div className="flex items-start gap-4">
+        {/* Skeleton Token Image - Left Side */}
+        <div className="flex-shrink-0">
+          <div className="size-32 rounded-lg bg-gray-600"></div>
+        </div>
+
+        {/* Skeleton Token Info - Right Side */}
+        <div className="flex-1 min-w-0">
+          {/* Top Row: Name, Symbol, Status */}
+          <div className="flex items-start justify-between">
+            <div className="flex-1 min-w-0">
+              <div className="mb-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="h-5 bg-gray-600 rounded w-24"></div>
+                </div>
+                <div className="h-3 bg-gray-700 rounded w-16"></div>
+              </div>
+            </div>
+
+            {/* Skeleton Pump.fun Link */}
+            <div className="flex-shrink-0">
+              <div className="w-7 h-7 bg-gray-600 rounded"></div>
+            </div>
+          </div>
+
+          {/* Skeleton Description */}
+          <div className="space-y-1 mb-2">
+            <div className="h-2 bg-gray-700 rounded w-full"></div>
+            <div className="h-2 bg-gray-700 rounded w-3/4"></div>
+          </div>
+
+          {/* Skeleton Mint Address and Twitter Profile - absolute bottom right */}
+          <div className="absolute bottom-2 right-2 flex flex-col items-end gap-[2px]">     
+            {/* Skeleton Fee Account Link */}
+            <div className="flex items-center gap-1 bg-gray-600 py-1 px-2 rounded-md">
+              <div className="size-5 rounded-full bg-gray-700"></div>
+              <div className="h-3 bg-gray-700 rounded w-16"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
     <div>
-      {/* Search and Filters - Single Line */}
+      {/* Search and Filters - Always Visible */}
       <div className="flex items-center justify-center gap-2 mb-6">
-        {/* Search - 80% */}
+        {/* Search - 50% on mobile, 40% on desktop */}
         <div className="relative w-[50%] md:w-[40%]">
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
           <input
@@ -141,7 +180,7 @@ const TokensList = () => {
           />
         </div>
 
-        {/* Status Filter - 10% */}
+        {/* Status Filter - 15% on mobile, 10% on desktop */}
         <div className="relative w-[15%] md:w-[10%]">
           <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs md:text-sm" />
           <select
@@ -156,7 +195,7 @@ const TokensList = () => {
           </select>
         </div>
 
-        {/* Refresh Button - 10% */}
+        {/* Refresh Button - 10% on mobile, 5% on desktop */}
         <button
           onClick={fetchTokens}
           disabled={loading}
@@ -175,166 +214,175 @@ const TokensList = () => {
 
       {/* Tokens List */}
       <div className="space-y-4">
-        <AnimatePresence>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[5%] xl:mx-[10%]'>
-          {tokens.map((token) => (
-            <motion.div
-              key={token.id}
-              initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 0 }}
-              className={`relative bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-full ${
-                isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
-              }`}
-            >
+        {loading ? (
+          // Show skeleton tokens while loading
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[5%] xl:mx-[10%]'>
+            {[...Array(9)].map((_, index) => (
+              <SkeletonToken key={`skeleton-${index}`} />
+            ))}
+          </div>
+        ) : (
+          <AnimatePresence>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[5%] xl:mx-[10%]'>
+              {tokens.map((token) => (
+                <motion.div
+                  key={token.id}
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 0 }}
+                  className={`relative bg-[#15161B] border border-[#2F3036] rounded-lg p-4 hover:border-gray-500 transition-colors w-full ${
+                    isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
+                  }`}
+                >
 
-              <div className="flex items-start gap-4">
-                {/* Token Image - Left Side */}
-                <div className="flex-shrink-0">
-                  {token.image_uri ? (
-                    <img
-                      src={token.image_uri}
-                      alt={`${token.name} logo`}
-                      className="size-32 rounded-lg object-cover bg-[#24252B] border border-[#2F3036]"
-                      onError={(e) => {
-                        // Fallback to placeholder if image fails to load
-                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iIzI0MjUyQiIvPgo8cGF0aCBkPSJNMzIgMjBMMzggMzJIMjZMMzIgMjBaIiBmaWxsPSIjNkI3MjgwIi8+CjxwYXRoIGQ9Ik0zMiA0NEwyNiAzMkgzOEwzMiA0NFoiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+';
-                      }}
-                    />
-                  ) : (
-                    // Placeholder when no image
-                    <div className="size-32 rounded-lg bg-[#24252B] border border-[#2F3036] flex items-center justify-center">
-                      <div className="text-gray-500 text-xs font-mono">
-                        {token.symbol ? token.symbol.slice(0, 3).toUpperCase() : '?'}
-                      </div>
+                  <div className="flex items-start gap-4">
+                    {/* Token Image - Left Side */}
+                    <div className="flex-shrink-0">
+                      {token.image_uri ? (
+                        <img
+                          src={token.image_uri}
+                          alt={`${token.name} logo`}
+                          className="size-32 rounded-lg object-cover bg-[#24252B] border border-[#2F3036]"
+                          onError={(e) => {
+                            // Fallback to placeholder if image fails to load
+                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iOCIgZmlsbD0iIzI0MjUyQiIvPgo8cGF0aCBkPSJNMzIgMjBMMzggMzJIMjZMMzIgMjBaIiBmaWxsPSIjNkI3MjgwIi8+CjxwYXRoIGQ9Ik0zMiA0NEwyNiAzMkgzOEwzMiA0NFoiIGZpbGw9IiM2QjcyODAiLz4KPC9zdmc+';
+                          }}
+                        />
+                      ) : (
+                        // Placeholder when no image
+                        <div className="size-32 rounded-lg bg-[#24252B] border border-[#2F3036] flex items-center justify-center">
+                          <div className="text-gray-500 text-xs font-mono">
+                            {token.symbol ? token.symbol.slice(0, 3).toUpperCase() : '?'}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                {/* Token Info - Right Side */}
-                <div className="flex-1 min-w-0">
-                  {/* Top Row: Name, Symbol, Status */}
-                  <div className="flex items-start justify-between">
+                    {/* Token Info - Right Side */}
                     <div className="flex-1 min-w-0">
-                      <div className="mb-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-bold text-white truncate">
-                            {token.name}
-                          </h3>
-                          {isTestToken(token) && (
-                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                              TEST
-                            </span>
-                          )}
+                      {/* Top Row: Name, Symbol, Status */}
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="mb-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-bold text-white truncate">
+                                {token.name}
+                              </h3>
+                              {isTestToken(token) && (
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  TEST
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              ({token.symbol})
+                            </div>
+                          </div>
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036] hidden">
+                            {token.status}
+                          </span>
                         </div>
-                        <div className="text-xs text-gray-400">
-                          ({token.symbol})
-                        </div>
-                      </div>
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-[#24252B] text-[#FAFAFA] border border-[#2F3036] hidden">
-                        {token.status}
-                      </span>
-                    </div>
 
-                    {/* Pump.fun Link */}
-                    {token.mint_address && !isTestToken(token) && (
-                      <a
-                        href={`https://pump.fun/${token.mint_address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-shrink-0"
-                      >
-                        <img src="/pill.png" className='w-7 h-7'/>
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Description */}
-                  {token.description && (
-                    <p className="text-gray-400 text-[10px] mb-2 line-clamp-2">
-                      {token.description}
-                    </p>
-                  )}
-
-                  {/* Mint Address and Twitter Profile - absolute bottom right */}
-                  <div className="absolute bottom-2 right-2 flex flex-col items-end gap-[2px]">
-                    {/* Mint Address with Copy Button */}
-                    {token.mint_address && (
-                      <div className="flex items-center space-x-[1px]">
-                        <span className="text-gray-500 text-[8px]">
-                          {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
-                        </span>
-                        <button
-                          onClick={() => handleCopyAddress(token.mint_address)}
-                          className="w-4 h-4 flex items-center justify-center cursor-pointer"
-                          title="Copy mint address"
-                        >
-                          {copiedAddresses.has(token.mint_address) ? (
-                            <svg className="w-2.5 h-2.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                          ) : (
-                            <svg className="size-[10px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                    
-                    {/* Fee Account Link with Twitter Profile Photo */}
-                    {token.fee_account && (
-                      <Link
-                        href={`https://x.com/${token.fee_account}`}
-                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-sm hover:bg-gray-800 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {getTwitterProfileImage(token.fee_account) && (
-                          <img
-                            src={getTwitterProfileImage(token.fee_account)}
-                            alt={`${token.fee_account} profile`}
-                            className="size-5 rounded-full border border-gray-600" 
-                            onError={(e) => {
-                              // Hide image if it fails to load
-                              e.target.style.display = 'none';
-                            }}
-                          />
+                        {/* Pump.fun Link */}
+                        {token.mint_address && !isTestToken(token) && (
+                          <a
+                            href={`https://pump.fun/${token.mint_address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-shrink-0"
+                          >
+                            <img src="/pill.png" className='w-7 h-7'/>
+                          </a>
                         )}
-                        <span>{token.fee_account}</span>
-                      </Link>
-                    )}
-                  </div>
+                      </div>
 
-                  {/* Hidden Social Links */}
-                  <div className="gap-1 hidden">
-                    {token.twitter_url && (
-                      <a
-                        href={token.twitter_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded text-xs transition-colors"
-                      >
-                        <FaTwitter />
-                      </a>
-                    )}
-                    {token.website_url && (
-                      <a
-                        href={token.website_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-gray-600 hover:bg-gray-700 text-white p-2 rounded text-xs transition-colors"
-                      >
-                        <FaGlobe />
-                      </a>
-                    )}
+                      {/* Description */}
+                      {token.description && (
+                        <p className="text-gray-400 text-[10px] mb-2 line-clamp-2">
+                          {token.description}
+                        </p>
+                      )}
+
+                      {/* Mint Address and Twitter Profile - absolute bottom right */}
+                      <div className="absolute bottom-2 right-2 flex flex-col items-end gap-[2px]">
+                        {/* Mint Address with Copy Button */}
+                        {token.mint_address && (
+                          <div className="flex items-center space-x-[1px]">
+                            <span className="text-gray-500 text-[8px]">
+                              {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
+                            </span>
+                            <button
+                              onClick={() => handleCopyAddress(token.mint_address)}
+                              className="w-4 h-4 flex items-center justify-center cursor-pointer"
+                              title="Copy mint address"
+                            >
+                              {copiedAddresses.has(token.mint_address) ? (
+                                <svg className="w-2.5 h-2.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              ) : (
+                                <svg className="size-[10px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+                        )}
+                        
+                        {/* Fee Account Link with Twitter Profile Photo */}
+                        {token.fee_account && (
+                          <Link
+                            href={`https://x.com/${token.fee_account}`}
+                            className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-sm hover:bg-gray-800 transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {getTwitterProfileImage(token.fee_account) && (
+                              <img
+                                src={getTwitterProfileImage(token.fee_account)}
+                                alt={`${token.fee_account} profile`}
+                                className="size-5 rounded-full border border-gray-600" 
+                                onError={(e) => {
+                                  // Hide image if it fails to load
+                                  e.target.style.display = 'none';
+                                }}
+                              />
+                            )}
+                            <span>{token.fee_account}</span>
+                          </Link>
+                        )}
+                      </div>
+
+                      {/* Hidden Social Links */}
+                      <div className="gap-1 hidden">
+                        {token.twitter_url && (
+                          <a
+                            href={token.twitter_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded text-xs transition-colors"
+                          >
+                            <FaTwitter />
+                          </a>
+                        )}
+                        {token.website_url && (
+                          <a
+                            href={token.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-gray-600 hover:bg-gray-700 text-white p-2 rounded text-xs transition-colors"
+                          >
+                            <FaGlobe />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+          </AnimatePresence>
+        )}
 
         {/* Empty State */}
         {tokens.length === 0 && !loading && (
