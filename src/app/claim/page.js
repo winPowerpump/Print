@@ -490,7 +490,7 @@ export default function Claim() {
                   <button
                     onClick={() => handleExport(token)}
                     disabled={exportingTokens.has(token.id)}
-                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 hover:bg-[#5bc474] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                   >
                     {exportingTokens.has(token.id) ? (
                       <>
