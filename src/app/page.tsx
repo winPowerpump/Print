@@ -21,7 +21,7 @@ export default function Home() {
             </div>
             <div className='bg-[#9EC4F8] w-32 p-4'>
               
-              </div>
+            </div>
           </div>
         </div>
 
