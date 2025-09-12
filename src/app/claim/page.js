@@ -228,7 +228,7 @@ export default function Claim() {
                     </span>
                     <button
                       onClick={() => handleCopyAddress(token.mint_address)}
-                      className="w-5 h-5 flex items-center justify-center"
+                      className="w-5 h-5 flex items-center justify-center cursor-pointer"
                       title="Copy mint address"
                     >
                       {copiedAddresses.has(token.mint_address) ? (
