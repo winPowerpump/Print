@@ -113,7 +113,28 @@ export default function Claim() {
     }
   }, [user]);
 
-  // Token list component with sign out button
+  // Skeleton token item
+  const SkeletonTokenItem = () => (
+    <div className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 flex items-center justify-between relative animate-pulse">
+
+      {/* Left side - Skeleton image and token info */}
+      <div className="flex items-center space-x-4">
+        {/* Skeleton token image */}
+        <div className="w-12 h-12 rounded-full bg-gray-600 flex-shrink-0"></div>
+        
+        {/* Skeleton token details */}
+        <div>
+          <div className="w-20 h-4 bg-gray-600 rounded mb-2"></div>
+          <div className="w-16 h-3 bg-gray-700 rounded mb-1"></div>
+        </div>
+      </div>
+
+      {/* Right side - Skeleton claim button */}
+      <div className="w-16 h-8 bg-gray-600 rounded-lg flex-shrink-0 mt-4"></div>
+    </div>
+  );
+
+  // Token list component with sign out button (for authenticated users)
   const TokenList = () => (
     <div className="w-full max-w-2xl mx-auto px-4">
       {/* Header with user info and sign out button */}
@@ -321,6 +342,38 @@ export default function Claim() {
     </div>
   );
 
+  // Skeleton state for when not signed in
+  const SkeletonView = () => (
+    <div className="w-full max-w-2xl mx-auto px-4">
+      {/* Header with skeleton sign in button */}
+      <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-1">
+            Tokens
+          </h2>
+          <p className="text-gray-400">
+            Sign in to view your tokens
+          </p>
+        </div>
+        
+        {/* Sign In Button */}
+        <div className="flex items-center">
+          <XVerification onSuccess={handleVerificationSuccess} />
+        </div>
+      </div>
+
+      {/* Fixed height container with skeleton tokens */}
+      <div className="min-h-[400px]">
+        <div className="space-y-3">
+          {/* Show 5 skeleton tokens */}
+          {[...Array(5)].map((_, index) => (
+            <SkeletonTokenItem key={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   console.log('Rendering Claim component. User:', user);
 
   return (
@@ -334,7 +387,7 @@ export default function Claim() {
 
       <div className="min-h-screen flex flex-col justify-center items-center py-20">
         {!user ? (
-          <XVerification onSuccess={handleVerificationSuccess} />
+          <SkeletonView />
         ) : (
           <TokenList />
         )}
