@@ -418,93 +418,99 @@ export default function Claim() {
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
-            {tokens.map((token) => (
-              <div
-                key={token.id}
-                className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 flex items-center justify-between relative"
-              >
-                {/* Mint address in top right with copy button */}
-                {token.mint_address && (
-                  <div className="absolute top-1 right-1 flex items-center space-x-[1px]">
-                    <span className="text-gray-500 text-[10px]">
-                      {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
-                    </span>
-                    <button
-                      onClick={() => handleCopyAddress(token.mint_address)}
-                      className="w-5 h-5 flex items-center justify-center cursor-pointer"
-                      title="Copy mint address"
-                    >
-                      {copiedAddresses.has(token.mint_address) ? (
-                        <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      ) : (
-                        <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                )}
-
-                {/* Left side - Image and token info */}
-                <div className="flex items-center space-x-4">
-                  {/* Token image */}
-                  <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
-                    {token.image_uri ? (
-                      <img
-                        src={token.image_uri}
-                        alt={`${token.name} logo`}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          // Fallback to symbol initial if image fails
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    <div 
-                      className={`w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center ${token.image_uri ? 'hidden' : 'flex'}`}
-                    >
-                      <span className="text-white font-bold text-lg">
-                        {token.symbol?.charAt(0) || token.name?.charAt(0) || '?'}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {/* Token details */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {token.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm">${token.symbol}</p>
-                    <p className="text-gray-500 text-xs mt-1 hidden">
-                      Created: {new Date(token.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right side - Export button */}
-                <div className="flex flex-col gap-2">
+        // Replace the existing token list rendering section with this:
+        <div className="space-y-3">
+          {tokens.map((token) => (
+            <div
+              key={token.id}
+              className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 flex items-center justify-between relative"
+            >
+              {/* Mint address in top right with copy button */}
+              {token.mint_address && (
+                <div className="absolute top-1 right-1 flex items-center space-x-[1px]">
+                  <span className="text-gray-500 text-[10px]">
+                    {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
+                  </span>
                   <button
-                    onClick={() => handleExport(token)}
-                    disabled={exportingTokens.has(token.id)}
-                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                    onClick={() => handleCopyAddress(token.mint_address)}
+                    className="w-5 h-5 flex items-center justify-center cursor-pointer"
+                    title="Copy mint address"
                   >
-                    {exportingTokens.has(token.id) ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
-                        exporting
-                      </>
+                    {copiedAddresses.has(token.mint_address) ? (
+                      <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
                     ) : (
-                      'export wallet'
+                      <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
                     )}
                   </button>
                 </div>
+              )}
+
+              {/* Left side - Image and token info */}
+              <div className="flex items-center space-x-4">
+                {/* Token image */}
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
+                  {token.image_uri ? (
+                    <img
+                      src={token.image_uri}
+                      alt={`${token.name} logo`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to symbol initial if image fails
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={`w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center ${token.image_uri ? 'hidden' : 'flex'}`}
+                  >
+                    <span className="text-white font-bold text-lg">
+                      {token.symbol?.charAt(0) || token.name?.charAt(0) || '?'}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Token details */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {token.name}
+                  </h3>
+                  <p className="text-gray-400 text-sm">${token.symbol}</p>
+                  <p className="text-gray-500 text-xs mt-1 hidden">
+                    Created: {new Date(token.created_at).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            ))}
-          </div>
+
+              {/* Right side - Export button */}
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => handleExport(token)}
+                  disabled={exportingTokens.has(token.id)}
+                  className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                >
+                  {exportingTokens.has(token.id) ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                      exporting
+                    </>
+                  ) : (
+                    'export wallet'
+                  )}
+                </button>
+              </div>
+            </div>
+          ))}
+          
+          {/* Fill remaining slots with skeleton items to always show 5 total */}
+          {tokens.length < 5 && [...Array(5 - tokens.length)].map((_, index) => (
+            <SkeletonTokenItem key={`skeleton-${index}`} />
+          ))}
+        </div>
         )}
       </div>
 
