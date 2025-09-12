@@ -115,7 +115,7 @@ export default function Claim() {
 
   // Skeleton token item
   const SkeletonTokenItem = () => (
-    <div className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 flex items-center justify-between relative animate-pulse">
+    <div className="bg-[#1E1F26] rounded-lg px-4 py-6 border border-gray-700 flex items-center justify-between relative animate-pulse">
 
       {/* Left side - Skeleton image and token info */}
       <div className="flex items-center space-x-4">
@@ -220,11 +220,8 @@ export default function Claim() {
       {/* Fixed height container to prevent layout shifts */}
       <div className="min-h-[400px]">
         {loading ? (
-          <div className="space-y-3">
-            {/* Show skeleton tokens while loading */}
-            {[...Array(5)].map((_, index) => (
-              <SkeletonTokenItem key={`loading-${index}`} />
-            ))}
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
           </div>
         ) : tokens.length === 0 ? (
           <div className="text-center py-12">
