@@ -275,7 +275,7 @@ export default function Claim() {
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
-                    <p className="text-gray-500 text-xs mt-1">
+                    <p className="text-gray-500 text-xs mt-1 hidden">
                       Created: {new Date(token.created_at).toLocaleDateString()}
                     </p>
                   </div>
