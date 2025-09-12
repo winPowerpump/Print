@@ -524,10 +524,10 @@ const PumpTokenCreator = () => {
               {loading ? (
                 <>
                   <FaSpinner className="w-5 h-5 mr-2 animate-spin" />
-                  Creating Token...
+                  Creating...
                 </>
               ) : (
-                'Create Token'
+                'Create'
               )}
             </button>
 
