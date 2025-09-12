@@ -115,7 +115,7 @@ export default function Claim() {
 
   // Token list component with sign out button
   const TokenList = () => (
-    <div className="w-full max-w-2xl mx-auto px-4">
+    <div className="w-full max-w-2xl mx-auto px-8 md:px-4">
       {/* Header with user info and sign out button */}
       <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
         <div>
