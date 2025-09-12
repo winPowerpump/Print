@@ -47,7 +47,7 @@ export default function Home() {
             <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[20%]'>
               Launch for your favorite creators.
             </div>
-            <div className='text-center text-sm md:text-base text-balance font-bold text-gray-300 mb-4 mx-[20%]'>
+            <div className='text-center text-sm md:text-base text-balance font-semibold text-gray-300 mb-4 mx-[20%]'>
               they get the fees, it&apos;s time they printed
             </div>
           </div>
