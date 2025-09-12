@@ -222,7 +222,7 @@ export default function Claim() {
               >
                 {/* Mint address in top right with copy button */}
                 {token.mint_address && (
-                  <div className="absolute top-1 right-1 flex items-center space-x-2">
+                  <div className="absolute top-1 right-1 flex items-center space-x-1">
                     <span className="text-gray-500 text-[10px] font-mono">
                       {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
                     </span>
