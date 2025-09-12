@@ -299,7 +299,7 @@ const PumpTokenCreator = () => {
                   transition={{ duration: 0.2 }}
                   className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
                 >
-                  <div className="animate-spin rounded-full size-5 border-2 border-gray-300 border-t-[#67D682]"></div>
+                  <div className="animate-spin rounded-full size-5 border-2 border-white border-t-[#67D682]"></div>
                   <span className="font-semibold">
                     {steps[currentStep]?.label || 'Processing...'}
                   </span>
