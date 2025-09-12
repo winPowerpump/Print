@@ -106,7 +106,7 @@ function SignInContent() {
                     <button
                       onClick={() => handleSignIn(provider.id)}
                       disabled={isLoading}
-                      className="w-full bg-black text-white py-4 px-6 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium text-lg"
+                      className="w-full bg-black text-white py-4 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-medium text-lg cursor-pointer"
                     >
                       {isLoading ? (
                         <>
@@ -126,7 +126,7 @@ function SignInContent() {
                     <button
                       onClick={() => handleSignIn(provider.id)}
                       disabled={isLoading}
-                      className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium"
+                      className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-medium"
                     >
                       Continue with X
                     </button>
@@ -146,7 +146,7 @@ function SignInContent() {
         <div className="text-center">
           <button
             onClick={() => router.push('/')}
-            className="text-gray-600 hover:text-gray-900 transition duration-200 flex justify-center items-center space-x-1"
+            className="text-gray-600 hover:text-gray-900 transition duration-200 flex justify-center items-center space-x-1 cursor-pointer"
           >
             <IoMdArrowRoundBack size={20} /> Back to home
           </button>
