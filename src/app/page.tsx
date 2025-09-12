@@ -42,11 +42,10 @@ export default function Home() {
             <div className='w-full flex justify-center mb-2'>
               <motion.div
                 animate={{ 
-                  scale: [1, 1.02, 1],
-                  opacity: [0.9, 1, 0.9]
+                  scale: [1, 1.05, 1],
                 }}
                 transition={{
-                  duration: 3,
+                  duration: 1.5,
                   repeat: Infinity,
                   ease: "easeInOut",
                   repeatType: "reverse"
