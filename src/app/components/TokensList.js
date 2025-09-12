@@ -219,7 +219,7 @@ const TokensList = () => {
           disabled={loading}
           className="w-[10%] md:w-[5%] bg-[#15161B] border border-[#2F3036] text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
         >
-          <FaSync className={`text-lg ${loading ? 'animate-spin' : ''}`} />
+          <FaSync className={`text-md ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
