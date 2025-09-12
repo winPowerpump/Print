@@ -65,14 +65,14 @@ function SignInContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-[#15161B] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-4">
         {/* Header */}
         <div className="text-center">
           <h2 className="text-3xl font-bold text-white mb-2">
             Sign in to continue
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-300">
             Authenticate with your X account to verify your identity
           </p>
         </div>
@@ -97,7 +97,7 @@ function SignInContent() {
         )}
 
         {/* Sign In Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div className="bg-[#15161B] rounded-xl shadow-lg p-8 border border-gray-700">
           {providers ? (
             <div className="space-y-4">
               {Object.values(providers).map((provider) => (
@@ -148,7 +148,7 @@ function SignInContent() {
             onClick={() => router.push('/')}
             className="text-gray-600 hover:text-gray-900 transition duration-200 flex justify-center items-center space-x-1"
           >
-            <IoMdArrowRoundBack size={25} /> Back to home
+            <IoMdArrowRoundBack size={20} /> Back to home
           </button>
         </div>
       </div>
