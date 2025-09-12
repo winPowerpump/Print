@@ -495,10 +495,10 @@ export default function Claim() {
                     {exportingTokens.has(token.id) ? (
                       <>
                         <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
-                        Exporting...
+                        exporting...
                       </>
                     ) : (
-                      'Export Wallet'
+                      'export wallet'
                     )}
                   </button>
                   {exportedWallets[token.id] && (
