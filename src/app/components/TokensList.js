@@ -358,7 +358,7 @@ const TokensList = () => {
                               className="flex items-center justify-center text-white py-1 px-1"
                               title="Tweet about this token"
                             >
-                              <HiSpeakerphone className='text-sm'/>
+                              <HiSpeakerphone className='text-sm text-gray-300'/>
                             </a>
                             
                             {/* Fee Account Link */}
