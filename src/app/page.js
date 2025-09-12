@@ -1,10 +1,66 @@
 'use client';
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import XVerification from './components/XVerification'
 import ProtectedContent from './components/ProtectedContent'
 import TokensList from './components/TokensList'
 import Link from 'next/link'
+
+const words = ['creators.', 'causes.', 'people.', 'projects.', 'anything.']
+
+function AnimatedWord() {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length)
+    }, 3000) // Change word every 2.5 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const exitVariants = {
+    initial: { opacity: 1, y: 0 },
+    exit: { 
+      opacity: 0, 
+      y: 20,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
+  }
+
+  const enterVariants = {
+    initial: { opacity: 0, y: -10 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
+  }
+
+  return (
+    <span className="inline-block w-32 text-center">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={currentWordIndex}
+          variants={enterVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="inline-block"
+        >
+          {words[currentWordIndex]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
 
 export default function Home() {
   return (
@@ -65,8 +121,11 @@ export default function Home() {
                 </Link>
               </motion.div>
             </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[20%]'>
-              Launch for your favorite creators.
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[20%] whitespace-nowrap'>
+              Launch for your
+            </div>
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[10%] -translate-x-[5.25%]'>
+              favorite <AnimatedWord />
             </div>
             <div className='text-center text-sm md:text-base text-balance text-gray-300 mb-4 mx-[20%]'>
               they get the fees, it&apos;s time they printed
