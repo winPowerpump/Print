@@ -82,28 +82,28 @@ const PumpTokenCreator = () => {
       updateStepStatus('funding', 'complete');
       setCurrentStep(2);
       updateStepStatus('metadata', 'loading');
-    }, 2000);
+    }, 3500);
 
     // Simulate token launch
     setTimeout(() => {
       updateStepStatus('metadata', 'complete');
       setCurrentStep(3);
       updateStepStatus('token', 'loading');
-    }, 3500);
+    }, 5000);
 
     // Simulate saving
     setTimeout(() => {
       updateStepStatus('token', 'complete');
       setCurrentStep(4);
       updateStepStatus('saving', 'loading');
-    }, 5000);
+    }, 5500);
 
     // Complete
     setTimeout(() => {
       updateStepStatus('saving', 'complete');
       setCurrentStep(5);
       updateStepStatus('complete', 'complete');
-    }, 5500);
+    }, 6000);
   };
 
   const handleInputChange = (e) => {
@@ -112,6 +112,30 @@ const PumpTokenCreator = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Special handler for the directFeesTo field to auto-add @
+  const handleDirectFeesToChange = (e) => {
+    let value = e.target.value;
+    
+    // If user types something and it doesn't start with @, add it
+    if (value && !value.startsWith('@')) {
+      value = '@' + value;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      directFeesTo: value
+    }));
+  };
+
+  // Function to ensure @ prefix when saving/submitting
+  const getDirectFeesToValue = () => {
+    const value = formData.directFeesTo.trim();
+    if (value && !value.startsWith('@')) {
+      return '@' + value;
+    }
+    return value;
   };
 
   const handleImageChange = (e) => {
@@ -154,7 +178,8 @@ const PumpTokenCreator = () => {
       apiFormData.append('twitter', formData.twitter);
       apiFormData.append('telegram', formData.telegram);
       apiFormData.append('website', formData.website);
-      apiFormData.append('directFeesTo', formData.directFeesTo);
+      // Use the function to ensure @ prefix when submitting
+      apiFormData.append('directFeesTo', getDirectFeesToValue());
       
       if (formData.image) {
         apiFormData.append('image', formData.image);
@@ -453,7 +478,7 @@ const PumpTokenCreator = () => {
                 type="text"
                 name="directFeesTo"
                 value={formData.directFeesTo}
-                onChange={handleInputChange}
+                onChange={handleDirectFeesToChange}
                 placeholder="@printedwtf"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
