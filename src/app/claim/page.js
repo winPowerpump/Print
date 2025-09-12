@@ -12,6 +12,7 @@ export default function Claim() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [signOutLoading, setSignOutLoading] = useState(false);
+  const [copiedAddresses, setCopiedAddresses] = useState(new Set());
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -82,6 +83,25 @@ export default function Claim() {
   const handleClaim = (token) => {
     console.log('Claiming token:', token);
     // Add your claim logic here
+  };
+
+  // Handle copy mint address
+  const handleCopyAddress = async (address) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopiedAddresses(prev => new Set([...prev, address]));
+      
+      // Remove from copied set after 2 seconds
+      setTimeout(() => {
+        setCopiedAddresses(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(address);
+          return newSet;
+        });
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy address:', error);
+    }
   };
 
   // Fetch tokens when user changes
@@ -198,8 +218,32 @@ export default function Claim() {
             {tokens.map((token) => (
               <div
                 key={token.id}
-                className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors flex items-center justify-between"
+                className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors flex items-center justify-between relative"
               >
+                {/* Mint address in top right with copy button */}
+                {token.mint_address && (
+                  <div className="absolute top-3 right-3 flex items-center space-x-2">
+                    <span className="text-gray-500 text-xs font-mono">
+                      {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
+                    </span>
+                    <button
+                      onClick={() => handleCopyAddress(token.mint_address)}
+                      className="w-5 h-5 flex items-center justify-center hover:bg-gray-600 rounded transition-colors"
+                      title="Copy mint address"
+                    >
+                      {copiedAddresses.has(token.mint_address) ? (
+                        <svg className="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                )}
+
                 {/* Left side - Image and token info */}
                 <div className="flex items-center space-x-4">
                   {/* Token image */}
@@ -231,11 +275,6 @@ export default function Claim() {
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
-                    {token.mint_address && (
-                      <p className="text-gray-500 text-xs font-mono mt-1">
-                        {token.mint_address.slice(0, 8)}...{token.mint_address.slice(-8)}
-                      </p>
-                    )}
                     <p className="text-gray-500 text-xs mt-1">
                       Created: {new Date(token.created_at).toLocaleDateString()}
                     </p>
