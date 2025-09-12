@@ -448,7 +448,7 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-2">Fee Account*</label>
+              <label className="block text-gray-400 font-semibold mb-2">Send Fees*</label>
               <input
                 type="text"
                 name="directFeesTo"
