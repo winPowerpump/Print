@@ -48,7 +48,7 @@ export default function Home() {
               Launch for your favorite creators.
             </div>
             <div className='text-center text-sm md:text-base text-balance font-bold text-gray-300 mb-6 mx-[20%]'>
-              they get the fees, it's time they printed
+              they get the fees, it&apos;s time they printed
             </div>
           </div>
 
