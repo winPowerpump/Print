@@ -42,17 +42,25 @@ export default function Home() {
             <div className='w-full flex justify-center mb-2'>
               <motion.div
                 animate={{ 
-                  scale: [1, 1.05, 1],
+                  scale: [1, 1.02, 1],
+                  opacity: [0.9, 1, 0.9]
                 }}
                 transition={{
-                  duration: 1,
+                  duration: 3,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
+                  repeatType: "reverse"
                 }}
+                style={{
+                  willChange: "transform, opacity",
+                  backfaceVisibility: "hidden",
+                  perspective: 1000
+                }}
+                className="transform-gpu"
               >
                 <Link
                   href="/create"
-                  className="px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
+                  className="inline-block px-4 py-2 text-gray-300 font-bold mb-2 text-xl hover:text-white transition-colors"
                 >
                   [create]
                 </Link>
