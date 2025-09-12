@@ -297,9 +297,9 @@ const PumpTokenCreator = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
-                  className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
+                  className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
                 >
-                  <FaSpinner className="animate-spin" />
+                  <div className="animate-spin rounded-full size-5 border-2 border-gray-300 border-t-[#67D682]"></div>
                   <span className="font-semibold">
                     {steps[currentStep]?.label || 'Processing...'}
                   </span>
@@ -523,7 +523,7 @@ const PumpTokenCreator = () => {
             >
               {loading ? (
                 <>
-                  <FaSpinner className="w-5 h-5 mr-2 animate-spin" />
+                  <div className="animate-spin rounded-full h-5 w-5 mr-2 border-2 border-gray-300 border-t-[#67D682]"></div>
                   Creating...
                 </>
               ) : (
