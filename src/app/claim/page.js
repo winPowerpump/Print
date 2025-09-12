@@ -198,14 +198,14 @@ export default function Claim() {
     if (!wallet) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-[#1E1F26] rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+        <div className="bg-[#15161B] border border-[#2F3036] rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
           <div className="p-6">
             {/* Header */}
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-xl font-bold text-white mb-1">
-                  Wallet Details Exported! 🎉
+                  Wallet Details
                 </h3>
                 <p className="text-gray-400">
                   {wallet.tokenName} ({wallet.tokenSymbol})
@@ -219,21 +219,6 @@ export default function Claim() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            </div>
-
-            {/* Warning */}
-            <div className="bg-red-900 border border-red-700 rounded-lg p-4 mb-6">
-              <div className="flex items-start">
-                <svg className="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <h4 className="text-red-300 font-semibold mb-1">⚠️ Security Warning</h4>
-                  <p className="text-red-200 text-sm">
-                    Save these credentials securely. Keep your private key and API key safe and never share them.
-                  </p>
-                </div>
-              </div>
             </div>
 
             {/* Wallet Details */}
@@ -267,7 +252,7 @@ export default function Claim() {
               {/* Private Key */}
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Private Key 🔐
+                  Private Key
                 </label>
                 <div className="flex items-center bg-[#15161B] rounded border border-red-600 p-3">
                   <span className="text-red-300 text-sm font-mono flex-1 break-all">
@@ -283,50 +268,10 @@ export default function Claim() {
                       </svg>
                     ) : (
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
                     )}
                   </button>
-                </div>
-              </div>
-
-              {/* API Key */}
-              <div>
-                <label className="block text-gray-300 text-sm font-medium mb-2">
-                  PumpPortal API Key 🔑
-                </label>
-                <div className="flex items-center bg-[#15161B] rounded border border-blue-600 p-3">
-                  <span className="text-blue-300 text-sm font-mono flex-1 break-all">
-                    {wallet.apiKey}
-                  </span>
-                  <button
-                    onClick={() => handleCopyWalletField('apiKey', wallet.apiKey)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
-                  >
-                    {copiedWalletFields.has('apiKey') ? (
-                      <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Additional Info */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-400">Initial Balance:</span>
-                  <span className="text-white ml-2">{wallet.initialBalance} SOL</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Created:</span>
-                  <span className="text-white ml-2">
-                    {new Date(wallet.createdAt).toLocaleDateString()}
-                  </span>
                 </div>
               </div>
             </div>
@@ -335,18 +280,12 @@ export default function Claim() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => downloadWalletData(wallet)}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                className="flex-1 text-gray-900 bg-[#67D682] py-2 px-4 rounded-lg flex items-center justify-center cursor-pointer"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Download JSON
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Close
               </button>
             </div>
           </div>
