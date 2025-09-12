@@ -3,6 +3,7 @@
 import { getProviders, signIn } from 'next-auth/react'
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 interface Provider {
   id: string
@@ -68,12 +69,7 @@ function SignInContent() {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="w-20 h-20 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-white mb-2">
             Sign in to continue
           </h2>
           <p className="text-gray-600">
@@ -122,7 +118,7 @@ function SignInContent() {
                           <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                           </svg>
-                          Continue with {provider.name}
+                          Continue with X
                         </>
                       )}
                     </button>
@@ -132,7 +128,7 @@ function SignInContent() {
                       disabled={isLoading}
                       className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200 flex items-center justify-center font-medium"
                     >
-                      Continue with {provider.name}
+                      Continue with X
                     </button>
                   )}
                 </div>
@@ -144,39 +140,15 @@ function SignInContent() {
               <span className="text-gray-600">Loading sign in options...</span>
             </div>
           )}
-
-          {/* Info Section */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="text-sm text-gray-500 space-y-2">
-              <p className="flex items-center">
-                <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Secure OAuth 2.0 authentication
-              </p>
-              <p className="flex items-center">
-                <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                No passwords stored
-              </p>
-              <p className="flex items-center">
-                <svg className="w-4 h-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Minimal permissions required
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Back to Home */}
         <div className="text-center">
           <button
             onClick={() => router.push('/')}
-            className="text-gray-600 hover:text-gray-900 transition duration-200"
+            className="text-gray-600 hover:text-gray-900 transition duration-200 flex justify-center items-center space-x-1"
           >
-            ← Back to home
+            <IoMdArrowRoundBack size={25} /> Back to home
           </button>
         </div>
       </div>
@@ -187,7 +159,7 @@ function SignInContent() {
 export default function SignIn() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#15161B] flex items-center justify-center">
         <div className="loading-spinner"></div>
       </div>
     }>
