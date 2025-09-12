@@ -213,7 +213,7 @@ export default function Claim() {
               </div>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -234,7 +234,7 @@ export default function Claim() {
                   </span>
                   <button
                     onClick={() => handleCopyWalletField('publicKey', wallet.publicKey)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedWalletFields.has('publicKey') ? (
                       <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -260,7 +260,7 @@ export default function Claim() {
                   </span>
                   <button
                     onClick={() => handleCopyWalletField('privateKey', wallet.privateKey)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedWalletFields.has('privateKey') ? (
                       <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
