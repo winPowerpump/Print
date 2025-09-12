@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync, FaVolumeUp } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync, FaShare } from 'react-icons/fa';
 import { HiSpeakerphone } from "react-icons/hi";
 import Link from 'next/link';
 
@@ -358,7 +358,7 @@ const TokensList = () => {
                               className="flex items-center justify-center text-white py-1 px-1"
                               title="Tweet about this token"
                             >
-                              <HiSpeakerphone className='text-sm text-gray-300'/>
+                              <FaShare className='text-sm text-gray-300'/>
                             </a>
                             
                             {/* Fee Account Link */}
