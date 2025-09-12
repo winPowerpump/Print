@@ -59,7 +59,7 @@ export default function Home() {
               >
                 <Link
                   href="/create"
-                  className="inline-block px-4 py-2 text-gray-300 font-semibold mb-2 text-xl hover:text-white transition-colors"
+                  className="inline-block px-4 py-2 text-gray-300 font-medium mb-2 text-xl hover:text-white transition-colors"
                 >
                   [create]
                 </Link>
