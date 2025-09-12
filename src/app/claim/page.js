@@ -13,8 +13,8 @@ export default function Claim() {
   const [error, setError] = useState(null);
   const [signOutLoading, setSignOutLoading] = useState(false);
   const [copiedAddresses, setCopiedAddresses] = useState(new Set());
-  const [claimingTokens, setClaimingTokens] = useState(new Set());
-  const [claimedWallets, setClaimedWallets] = useState({});
+  const [exportingTokens, setExportingTokens] = useState(new Set());
+  const [exportedWallets, setExportedWallets] = useState({});
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [copiedWalletFields, setCopiedWalletFields] = useState(new Set());
@@ -84,14 +84,14 @@ export default function Claim() {
     }
   };
 
-  // Handle claim button click
-  const handleClaim = async (token) => {
-    console.log('Claiming wallet for token:', token);
+  // Handle export button click
+  const handleExport = async (token) => {
+    console.log('Exporting wallet for token:', token);
     
-    setClaimingTokens(prev => new Set([...prev, token.id]));
+    setExportingTokens(prev => new Set([...prev, token.id]));
     
     try {
-      const response = await fetch('/api/claim-wallet', {
+      const response = await fetch('/api/export-wallet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,8 +102,8 @@ export default function Claim() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store the claimed wallet data
-        setClaimedWallets(prev => ({
+        // Store the exported wallet data
+        setExportedWallets(prev => ({
           ...prev,
           [token.id]: data.wallet
         }));
@@ -116,18 +116,15 @@ export default function Claim() {
           tokenId: token.id
         });
         setShowWalletModal(true);
-        
-        // Refresh tokens to update status
-        await fetchUserTokens(pagination.page);
       } else {
-        console.error('Claim failed:', data.error);
-        setError(data.error || 'Failed to claim wallet');
+        console.error('Export failed:', data.error);
+        setError(data.error || 'Failed to export wallet');
       }
     } catch (error) {
-      console.error('Network error claiming wallet:', error);
-      setError('Network error while claiming wallet');
+      console.error('Network error exporting wallet:', error);
+      setError('Network error while exporting wallet');
     } finally {
-      setClaimingTokens(prev => {
+      setExportingTokens(prev => {
         const newSet = new Set(prev);
         newSet.delete(token.id);
         return newSet;
@@ -208,7 +205,7 @@ export default function Claim() {
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-xl font-bold text-white mb-1">
-                  Wallet Claimed Successfully! 🎉
+                  Wallet Details Exported! 🎉
                 </h3>
                 <p className="text-gray-400">
                   {wallet.tokenName} ({wallet.tokenSymbol})
@@ -233,7 +230,7 @@ export default function Claim() {
                 <div>
                   <h4 className="text-red-300 font-semibold mb-1">⚠️ Security Warning</h4>
                   <p className="text-red-200 text-sm">
-                    Save these credentials securely. This is your only chance to view the private key and API key.
+                    Save these credentials securely. Keep your private key and API key safe and never share them.
                   </p>
                 </div>
               </div>
@@ -373,7 +370,7 @@ export default function Claim() {
         </div>
       </div>
 
-      {/* Right side - Skeleton claim button */}
+      {/* Right side - Skeleton export button */}
       <div className="w-16 h-8 bg-gray-600 rounded-lg flex-shrink-0 mt-4"></div>
     </div>
   );
@@ -512,21 +509,8 @@ export default function Claim() {
                   </div>
                 )}
 
-                {/* Status badge */}
-                {token.status && (
-                  <div className="absolute top-1 left-1">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      token.status === 'claimed' 
-                        ? 'bg-green-900 text-green-300 border border-green-700' 
-                        : 'bg-yellow-900 text-yellow-300 border border-yellow-700'
-                    }`}>
-                      {token.status === 'claimed' ? '✅ Claimed' : '⏳ Ready'}
-                    </span>
-                  </div>
-                )}
-
                 {/* Left side - Image and token info */}
-                <div className="flex items-center space-x-4 mt-6">
+                <div className="flex items-center space-x-4">
                   {/* Token image */}
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
                     {token.image_uri ? (
@@ -563,7 +547,7 @@ export default function Claim() {
                 </div>
 
                 {/* Right side - Export button */}
-                <div className="flex flex-col gap-2 mt-6">
+                <div className="flex flex-col gap-2">
                   <button
                     onClick={() => handleExport(token)}
                     disabled={exportingTokens.has(token.id)}
