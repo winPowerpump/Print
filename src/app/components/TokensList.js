@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaExternalLinkAlt, FaTwitter, FaGlobe, FaSearch, FaFilter, FaSync, FaShare } from 'react-icons/fa';
 import { HiSpeakerphone } from "react-icons/hi";
+import { MdOutlineRefresh } from "react-icons/md";
 import Link from 'next/link';
 
 const TokensList = () => {
@@ -217,9 +218,9 @@ const TokensList = () => {
         <button
           onClick={fetchTokens}
           disabled={loading}
-          className="w-[10%] md:w-[5%] bg-[#15161B] border border-[#2F3036] text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
+          className="w-[10%] md:w-min bg-[#15161B] text-white px-1 py-3 rounded-lg font-medium flex items-center justify-center cursor-pointer"
         >
-          <FaSync className={`text-md ${loading ? 'animate-spin' : ''}`} />
+          <MdOutlineRefresh className={`text-xl ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
