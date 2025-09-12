@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signOut } from 'next-auth/react'; // Add this import
+import { signOut } from 'next-auth/react';
 import XVerification from "../components/XVerification";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
@@ -11,7 +11,7 @@ export default function Claim() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const [signOutLoading, setSignOutLoading] = useState(false); // Add loading state for sign out
+  const [signOutLoading, setSignOutLoading] = useState(false);
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -78,6 +78,12 @@ export default function Claim() {
     }
   };
 
+  // Handle claim button click
+  const handleClaim = (token) => {
+    console.log('Claiming token:', token);
+    // Add your claim logic here
+  };
+
   // Fetch tokens when user changes
   useEffect(() => {
     console.log('User state changed:', user);
@@ -89,20 +95,20 @@ export default function Claim() {
 
   // Token list component with sign out button
   const TokenList = () => (
-    <div className="w-full max-w-6xl mx-auto px-4">
+    <div className="w-full max-w-2xl mx-auto px-4">
       {/* Header with user info and sign out button */}
       <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white mb-2">
-            Tokens
+            Your Tokens
           </h2>
           <p className="text-gray-400">
-            {pagination.total} token{pagination.total !== 1 ? 's' : ''} found
+            {pagination.total} token{pagination.total !== 1 ? 's' : ''} available
           </p>
         </div>
         
         {/* User info and Sign Out Button */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-3">
           {/* User info display */}
           <div className="hidden sm:flex items-center space-x-2 bg-black rounded-lg px-3 py-1.5">
             <div className="relative">
@@ -111,7 +117,6 @@ export default function Claim() {
                 alt={`${user?.name || user?.username} profile picture`}
                 className="w-8 h-8 rounded-full"
                 onError={(e) => {
-                  // Fallback to initials if image fails to load
                   e.target.style.display = 'none';
                   e.target.nextSibling.style.display = 'flex';
                 }}
@@ -171,115 +176,100 @@ export default function Claim() {
         </div>
       )}
 
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
-        </div>
-      ) : tokens.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-400 text-lg">No tokens found for your account.</p>
-          <p className="text-gray-500 mt-2">Create your first token to get started!</p>
-          <button 
-            onClick={() => fetchUserTokens()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Refresh
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Fixed height container to prevent layout shifts */}
+      <div className="min-h-[400px]">
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
+          </div>
+        ) : tokens.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">No tokens found for your account.</p>
+            <p className="text-gray-500 mt-2">Create your first token to get started!</p>
+            <button 
+              onClick={() => fetchUserTokens()}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Refresh
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
             {tokens.map((token) => (
               <div
                 key={token.id}
-                className="bg-[#1E1F26] rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition-colors"
+                className="bg-[#1E1F26] rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors flex items-center justify-between"
               >
-                <div className="flex items-start justify-between mb-4">
+                {/* Left side - Image and token info */}
+                <div className="flex items-center space-x-4">
+                  {/* Token image */}
+                  <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
+                    {token.image_uri ? (
+                      <img
+                        src={token.image_uri}
+                        alt={`${token.name} logo`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to symbol initial if image fails
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className={`w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center ${token.image_uri ? 'hidden' : 'flex'}`}
+                    >
+                      <span className="text-white font-bold text-lg">
+                        {token.symbol?.charAt(0) || token.name?.charAt(0) || '?'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Token details */}
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-1">
+                    <h3 className="text-lg font-semibold text-white">
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
                   </div>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    token.status === 'active' 
-                      ? 'bg-green-900 text-green-300' 
-                      : token.status === 'pending'
-                      ? 'bg-yellow-900 text-yellow-300'
-                      : 'bg-red-900 text-red-300'
-                  }`}>
-                    {token.status}
-                  </span>
-                </div>
-                
-                {token.description && (
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">
-                    {token.description}
-                  </p>
-                )}
-                
-                <div className="space-y-2 text-xs text-gray-400">
-                  {token.mint_address && (
-                    <div>
-                      <span className="font-medium">Address: </span>
-                      <span className="font-mono">
-                        {token.mint_address.slice(0, 8)}...{token.mint_address.slice(-8)}
-                      </span>
-                    </div>
-                  )}
-                  {token.total_supply && (
-                    <div>
-                      <span className="font-medium">Supply: </span>
-                      {token.total_supply.toLocaleString()}
-                    </div>
-                  )}
-                  <div>
-                    <span className="font-medium">Created: </span>
-                    {new Date(token.created_at).toLocaleDateString()}
-                  </div>
                 </div>
 
-                {token.metadata_uri && (
-                  <div className="mt-4 pt-4 border-t border-gray-700">
-                    <a
-                      href={token.metadata_uri}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-blue-300 text-sm"
-                    >
-                      View Metadata →
-                    </a>
-                  </div>
-                )}
+                {/* Right side - Claim button */}
+                <button
+                  onClick={() => handleClaim(token)}
+                  className="px-6 py-2 bg-[#67D682] hover:bg-[#5bc474] text-black font-semibold rounded-lg transition-colors flex-shrink-0"
+                >
+                  Claim
+                </button>
               </div>
             ))}
           </div>
+        )}
+      </div>
 
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <div className="flex justify-center items-center mt-8 space-x-4">
-              <button
-                onClick={() => fetchUserTokens(pagination.page - 1)}
-                disabled={!pagination.hasPrev || loading}
-                className="px-4 py-2 bg-[#1E1F26] text-white rounded border border-gray-700 hover:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              
-              <span className="text-gray-400">
-                Page {pagination.page} of {pagination.totalPages}
-              </span>
-              
-              <button
-                onClick={() => fetchUserTokens(pagination.page + 1)}
-                disabled={!pagination.hasNext || loading}
-                className="px-4 py-2 bg-[#1E1F26] text-white rounded border border-gray-700 hover:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </>
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <div className="flex justify-center items-center mt-8 space-x-4">
+          <button
+            onClick={() => fetchUserTokens(pagination.page - 1)}
+            disabled={!pagination.hasPrev || loading}
+            className="px-4 py-2 bg-[#1E1F26] text-white rounded border border-gray-700 hover:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          
+          <span className="text-gray-400">
+            Page {pagination.page} of {pagination.totalPages}
+          </span>
+          
+          <button
+            onClick={() => fetchUserTokens(pagination.page + 1)}
+            disabled={!pagination.hasNext || loading}
+            className="px-4 py-2 bg-[#1E1F26] text-white rounded border border-gray-700 hover:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );
