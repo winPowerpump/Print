@@ -119,7 +119,7 @@ export default function Claim() {
       {/* Header with user info and sign out button */}
       <div className="mb-6 flex justify-between items-start flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-white mb-1">
             Tokens
           </h2>
           <p className="text-gray-400">
