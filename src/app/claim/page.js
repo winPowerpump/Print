@@ -13,6 +13,11 @@ export default function Claim() {
   const [error, setError] = useState(null);
   const [signOutLoading, setSignOutLoading] = useState(false);
   const [copiedAddresses, setCopiedAddresses] = useState(new Set());
+  const [claimingTokens, setClaimingTokens] = useState(new Set());
+  const [claimedWallets, setClaimedWallets] = useState({});
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState(null);
+  const [copiedWalletFields, setCopiedWalletFields] = useState(new Set());
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
@@ -80,9 +85,54 @@ export default function Claim() {
   };
 
   // Handle claim button click
-  const handleClaim = (token) => {
-    console.log('Claiming token:', token);
-    // Add your claim logic here
+  const handleClaim = async (token) => {
+    console.log('Claiming wallet for token:', token);
+    
+    setClaimingTokens(prev => new Set([...prev, token.id]));
+    
+    try {
+      const response = await fetch('/api/claim-wallet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tokenId: token.id })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Store the claimed wallet data
+        setClaimedWallets(prev => ({
+          ...prev,
+          [token.id]: data.wallet
+        }));
+        
+        // Show the wallet details modal
+        setSelectedWallet({
+          ...data.wallet,
+          tokenName: token.name,
+          tokenSymbol: token.symbol,
+          tokenId: token.id
+        });
+        setShowWalletModal(true);
+        
+        // Refresh tokens to update status
+        await fetchUserTokens(pagination.page);
+      } else {
+        console.error('Claim failed:', data.error);
+        setError(data.error || 'Failed to claim wallet');
+      }
+    } catch (error) {
+      console.error('Network error claiming wallet:', error);
+      setError('Network error while claiming wallet');
+    } finally {
+      setClaimingTokens(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(token.id);
+        return newSet;
+      });
+    }
   };
 
   // Handle copy mint address
@@ -104,6 +154,39 @@ export default function Claim() {
     }
   };
 
+  // Handle copy wallet field
+  const handleCopyWalletField = async (field, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedWalletFields(prev => new Set([...prev, field]));
+      
+      // Remove from copied set after 2 seconds
+      setTimeout(() => {
+        setCopiedWalletFields(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(field);
+          return newSet;
+        });
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy wallet field:', error);
+    }
+  };
+
+  // Download wallet as JSON
+  const downloadWalletData = (walletData) => {
+    const dataStr = JSON.stringify(walletData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `wallet-${walletData.tokenSymbol}-${walletData.publicKey.slice(0, 8)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // Fetch tokens when user changes
   useEffect(() => {
     console.log('User state changed:', user);
@@ -113,10 +196,171 @@ export default function Claim() {
     }
   }, [user]);
 
+  // Wallet Details Modal Component
+  const WalletModal = ({ wallet, onClose }) => {
+    if (!wallet) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-[#1E1F26] rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-1">
+                  Wallet Claimed Successfully! 🎉
+                </h3>
+                <p className="text-gray-400">
+                  {wallet.tokenName} ({wallet.tokenSymbol})
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Warning */}
+            <div className="bg-red-900 border border-red-700 rounded-lg p-4 mb-6">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <h4 className="text-red-300 font-semibold mb-1">⚠️ Security Warning</h4>
+                  <p className="text-red-200 text-sm">
+                    Save these credentials securely. This is your only chance to view the private key and API key.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Wallet Details */}
+            <div className="space-y-4">
+              {/* Public Key */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Public Key
+                </label>
+                <div className="flex items-center bg-[#15161B] rounded border border-gray-600 p-3">
+                  <span className="text-white text-sm font-mono flex-1 break-all">
+                    {wallet.publicKey}
+                  </span>
+                  <button
+                    onClick={() => handleCopyWalletField('publicKey', wallet.publicKey)}
+                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                  >
+                    {copiedWalletFields.has('publicKey') ? (
+                      <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Private Key */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Private Key 🔐
+                </label>
+                <div className="flex items-center bg-[#15161B] rounded border border-red-600 p-3">
+                  <span className="text-red-300 text-sm font-mono flex-1 break-all">
+                    {wallet.privateKey}
+                  </span>
+                  <button
+                    onClick={() => handleCopyWalletField('privateKey', wallet.privateKey)}
+                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                  >
+                    {copiedWalletFields.has('privateKey') ? (
+                      <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* API Key */}
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  PumpPortal API Key 🔑
+                </label>
+                <div className="flex items-center bg-[#15161B] rounded border border-blue-600 p-3">
+                  <span className="text-blue-300 text-sm font-mono flex-1 break-all">
+                    {wallet.apiKey}
+                  </span>
+                  <button
+                    onClick={() => handleCopyWalletField('apiKey', wallet.apiKey)}
+                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
+                  >
+                    {copiedWalletFields.has('apiKey') ? (
+                      <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-400">Initial Balance:</span>
+                  <span className="text-white ml-2">{wallet.initialBalance} SOL</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">Created:</span>
+                  <span className="text-white ml-2">
+                    {new Date(wallet.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => downloadWalletData(wallet)}
+                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download JSON
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Skeleton token item
   const SkeletonTokenItem = () => (
     <div className="bg-[#1E1F26] rounded-lg px-4 py-5 border border-gray-700 flex items-center justify-between relative animate-pulse">
-
       {/* Left side - Skeleton image and token info */}
       <div className="flex items-center space-x-4">
         {/* Skeleton token image */}
@@ -268,8 +512,21 @@ export default function Claim() {
                   </div>
                 )}
 
+                {/* Status badge */}
+                {token.status && (
+                  <div className="absolute top-1 left-1">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      token.status === 'claimed' 
+                        ? 'bg-green-900 text-green-300 border border-green-700' 
+                        : 'bg-yellow-900 text-yellow-300 border border-yellow-700'
+                    }`}>
+                      {token.status === 'claimed' ? '✅ Claimed' : '⏳ Ready'}
+                    </span>
+                  </div>
+                )}
+
                 {/* Left side - Image and token info */}
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 mt-6">
                   {/* Token image */}
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
                     {token.image_uri ? (
@@ -299,19 +556,50 @@ export default function Claim() {
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
-                    <p className="text-gray-500 text-xs mt-1 hidden">
+                    <p className="text-gray-500 text-xs mt-1">
                       Created: {new Date(token.created_at).toLocaleDateString()}
                     </p>
+                    {token.claimed_at && (
+                      <p className="text-green-400 text-xs">
+                        Claimed: {new Date(token.claimed_at).toLocaleDateString()}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                {/* Right side - Claim button */}
-                <button
-                  onClick={() => handleClaim(token)}
-                  className="px-6 py-2 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 mt-4"
-                >
-                  claim
-                </button>
+                {/* Right side - Export button */}
+                <div className="flex flex-col gap-2 mt-6">
+                  <button
+                    onClick={() => handleExport(token)}
+                    disabled={exportingTokens.has(token.id)}
+                    className="px-6 py-2 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 hover:bg-[#5bc474] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                  >
+                    {exportingTokens.has(token.id) ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Exporting...
+                      </>
+                    ) : (
+                      'Export Wallet'
+                    )}
+                  </button>
+                  {exportedWallets[token.id] && (
+                    <button
+                      onClick={() => {
+                        setSelectedWallet({
+                          ...exportedWallets[token.id],
+                          tokenName: token.name,
+                          tokenSymbol: token.symbol,
+                          tokenId: token.id
+                        });
+                        setShowWalletModal(true);
+                      }}
+                      className="px-4 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                    >
+                      View Again
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -395,6 +683,17 @@ export default function Claim() {
           <TokenList />
         )}
       </div>
+
+      {/* Wallet Modal */}
+      {showWalletModal && selectedWallet && (
+        <WalletModal 
+          wallet={selectedWallet} 
+          onClose={() => {
+            setShowWalletModal(false);
+            setSelectedWallet(null);
+          }} 
+        />
+      )}
     </div>
   );
 }
