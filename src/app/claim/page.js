@@ -501,22 +501,6 @@ export default function Claim() {
                       'export wallet'
                     )}
                   </button>
-                  {exportedWallets[token.id] && (
-                    <button
-                      onClick={() => {
-                        setSelectedWallet({
-                          ...exportedWallets[token.id],
-                          tokenName: token.name,
-                          tokenSymbol: token.symbol,
-                          tokenId: token.id
-                        });
-                        setShowWalletModal(true);
-                      }}
-                      className="px-4 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
-                    >
-                      View Again
-                    </button>
-                  )}
                 </div>
               </div>
             ))}
