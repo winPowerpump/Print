@@ -231,6 +231,14 @@ export default function Claim() {
                       {token.name}
                     </h3>
                     <p className="text-gray-400 text-sm">${token.symbol}</p>
+                    {token.mint_address && (
+                      <p className="text-gray-500 text-xs font-mono mt-1">
+                        {token.mint_address.slice(0, 8)}...{token.mint_address.slice(-8)}
+                      </p>
+                    )}
+                    <p className="text-gray-500 text-xs mt-1">
+                      Created: {new Date(token.created_at).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
 
