@@ -286,7 +286,7 @@ const TokensList = () => {
                     {token.fee_account && (
                       <Link
                         href={`https://x.com/${token.fee_account}`}
-                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
+                        className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-sm hover:bg-gray-800 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -294,7 +294,7 @@ const TokensList = () => {
                           <img
                             src={getTwitterProfileImage(token.fee_account)}
                             alt={`${token.fee_account} profile`}
-                            className="w-4 h-4 rounded-full border border-gray-600" 
+                            className="size-5 rounded-full border border-gray-600" 
                             onError={(e) => {
                               // Hide image if it fails to load
                               e.target.style.display = 'none';
