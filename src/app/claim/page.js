@@ -220,8 +220,11 @@ export default function Claim() {
       {/* Fixed height container to prevent layout shifts */}
       <div className="min-h-[400px]">
         {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-[#67D682]"></div>
+          <div className="space-y-3">
+            {/* Show skeleton tokens while loading */}
+            {[...Array(5)].map((_, index) => (
+              <SkeletonTokenItem key={`loading-${index}`} />
+            ))}
           </div>
         ) : tokens.length === 0 ? (
           <div className="text-center py-12">
