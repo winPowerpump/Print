@@ -227,7 +227,7 @@ const TokensList = () => {
                             </span>
                           )}
                         </div>
-                        <div className="text-sm text-gray-400">
+                        <div className="text-xs text-gray-400">
                           ({token.symbol})
                         </div>
                       </div>
@@ -251,7 +251,7 @@ const TokensList = () => {
 
                   {/* Description */}
                   {token.description && (
-                    <p className="text-gray-400 text-xs mb-2 line-clamp-2">
+                    <p className="text-gray-400 text-[10px] mb-2 line-clamp-2">
                       {token.description}
                     </p>
                   )}
