@@ -234,7 +234,7 @@ export default function Claim() {
                   </span>
                   <button
                     onClick={() => handleCopyWalletField('publicKey', wallet.publicKey)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    className="ml-2 p-1 text-gray-400 cursor-pointer"
                   >
                     {copiedWalletFields.has('publicKey') ? (
                       <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -260,7 +260,7 @@ export default function Claim() {
                   </span>
                   <button
                     onClick={() => handleCopyWalletField('privateKey', wallet.privateKey)}
-                    className="ml-2 p-1 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    className="ml-2 p-1 text-gray-400 cursor-pointer"
                   >
                     {copiedWalletFields.has('privateKey') ? (
                       <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -495,7 +495,7 @@ export default function Claim() {
                     {exportingTokens.has(token.id) ? (
                       <>
                         <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
-                        exporting...
+                        exporting
                       </>
                     ) : (
                       'export wallet'
