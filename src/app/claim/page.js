@@ -559,11 +559,6 @@ export default function Claim() {
                     <p className="text-gray-500 text-xs mt-1">
                       Created: {new Date(token.created_at).toLocaleDateString()}
                     </p>
-                    {token.claimed_at && (
-                      <p className="text-green-400 text-xs">
-                        Claimed: {new Date(token.claimed_at).toLocaleDateString()}
-                      </p>
-                    )}
                   </div>
                 </div>
 
