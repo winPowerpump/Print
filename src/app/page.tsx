@@ -44,8 +44,11 @@ export default function Home() {
                 [create]
               </Link>
             </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-6 mx-[20%]'>
-              Direct fees to your favorite creators.
+            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[20%]'>
+              Launch for your favorite creators.
+            </div>
+            <div className='text-center text-sm md:text-base text-balance font-bold text-gray-300 mb-6 mx-[20%]'>
+              they get the dev wallet and fees, it's time they printed
             </div>
           </div>
 
