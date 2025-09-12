@@ -10,6 +10,7 @@ const TokensList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [pagination, setPagination] = useState({});
+  const [copiedAddresses, setCopiedAddresses] = useState(new Set());
   const [filters, setFilters] = useState({
     page: 1,
     limit: 20,
@@ -36,6 +37,25 @@ const TokensList = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle copy mint address
+  const handleCopyAddress = async (address) => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopiedAddresses(prev => new Set([...prev, address]));
+      
+      // Remove from copied set after 2 seconds
+      setTimeout(() => {
+        setCopiedAddresses(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(address);
+          return newSet;
+        });
+      }, 2000);
+    } catch (error) {
+      console.error('Failed to copy address:', error);
     }
   };
 
@@ -167,6 +187,7 @@ const TokensList = () => {
                 isTestToken(token) ? 'border-l-4 border-l-blue-500' : ''
               }`}
             >
+
               <div className="flex items-start gap-4">
                 {/* Token Image - Left Side */}
                 <div className="flex-shrink-0">
@@ -235,20 +256,34 @@ const TokensList = () => {
                     </p>
                   )}
 
-                  {/* Bottom Row: Contract Address */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      {token.mint_address && (
-                        <div className="text-gray-300 font-mono text-[8px] truncate">
+                  {/* Mint Address and Twitter Profile - absolute bottom right */}
+                  <div className="absolute bottom-2 right-2 flex flex-col items-end gap-[2px]">
+                    {/* Mint Address with Copy Button */}
+                    {token.mint_address && (
+                      <div className="flex items-center space-x-[1px]">
+                        <span className="text-gray-500 text-[8px]">
                           {token.mint_address.slice(0, 3)}...{token.mint_address.slice(-4)}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Fee Account Link with Twitter Profile Photo */}
-                  {token.fee_account && (
-                    <div className='absolute bottom-2 right-2'>
+                        </span>
+                        <button
+                          onClick={() => handleCopyAddress(token.mint_address)}
+                          className="w-4 h-4 flex items-center justify-center cursor-pointer"
+                          title="Copy mint address"
+                        >
+                          {copiedAddresses.has(token.mint_address) ? (
+                            <svg className="w-2.5 h-2.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          ) : (
+                            <svg className="size-[10px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                    
+                    {/* Fee Account Link with Twitter Profile Photo */}
+                    {token.fee_account && (
                       <Link
                         href={`https://x.com/${token.fee_account}`}
                         className="flex items-center gap-1 text-white bg-black py-1 px-2 rounded-md text-xs hover:bg-gray-800 transition-colors"
@@ -259,7 +294,7 @@ const TokensList = () => {
                           <img
                             src={getTwitterProfileImage(token.fee_account)}
                             alt={`${token.fee_account} profile`}
-                            className="w-4 h-4 rounded-full border border-gray-600"
+                            className="w-4 h-4 rounded-full border border-gray-600" 
                             onError={(e) => {
                               // Hide image if it fails to load
                               e.target.style.display = 'none';
@@ -268,8 +303,8 @@ const TokensList = () => {
                         )}
                         <span>{token.fee_account}</span>
                       </Link>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Hidden Social Links */}
                   <div className="gap-1 hidden">
