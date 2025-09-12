@@ -296,7 +296,7 @@ export default function Claim() {
 
   // Skeleton token item
   const SkeletonTokenItem = () => (
-    <div className="bg-[#1E1F26] rounded-lg px-4 py-5 border border-gray-700 flex items-center justify-between relative animate-pulse">
+    <div className="bg-[#1E1F26] rounded-lg px-4 py-4 border border-gray-700 flex items-center justify-between relative animate-pulse">
       {/* Left side - Skeleton image and token info */}
       <div className="flex items-center space-x-4">
         {/* Skeleton token image */}
