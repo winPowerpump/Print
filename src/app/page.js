@@ -68,20 +68,44 @@ function BackgroundMarquee() {
       <Marquee 
         speed={150}
         gradient={false}
-        className="text-6xl md:text-8xl font-black text-white/5 select-none"
+        className="text-6xl md:text-8xl font-black text-white/15 select-none"
       >
         <span className="mx-8">LAUNCH</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
         <span className="mx-8">CREATE</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
         <span className="mx-8">PRINT</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
         <span className="mx-8">LAUNCH</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
         <span className="mx-8">CREATE</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
         <span className="mx-8">PRINT</span>
-        <span className="mx-8">•</span>
+        <img 
+          src="coin.gif" 
+          alt="coin" 
+          className="mx-6 w-12 h-12 md:w-24 md:h-24 inline-block opacity-15"
+        />
       </Marquee>
     </div>
   )
