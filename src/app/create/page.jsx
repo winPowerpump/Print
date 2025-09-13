@@ -599,7 +599,7 @@ const PumpTokenCreator = () => {
                             placeholder="https://..."
                             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
-                          <p className="text-xs text-gray-500 mt-1">Saved for reference only. Token will link to print-swart.vercel.app</p>
+                          <p className="text-xs text-gray-500 mt-1">saved for printed token page</p>
                         </div>
                       </div>
                     </div>
