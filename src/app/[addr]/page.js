@@ -178,16 +178,17 @@ export default function Token() {
             </div>
           </div>
 
-          {/* Fee Account */}
-          {token.fee_account && (
-            <div className="bg-black rounded-lg p-3">
-              <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
-                  {token.fee_account}
-                </code>
-              </div>
-            </div>
-          )}
+          <Link href={`https://x.com/${token.fee_account}`}>
+            {token.fee_account && (
+                <div className="bg-black rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                    <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
+                    {token.fee_account}
+                    </code>
+                </div>
+                </div>
+            )}
+          </Link>
 
           {/* Social Links */}
           {(token.website_url || token.twitter_url || token.telegram_url) && (
