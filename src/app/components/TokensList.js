@@ -378,20 +378,22 @@ const TokensList = () => {
                                     console.log(`✅ Avatar loaded successfully for ${token.fee_account}:`, e.target.src);
                                     console.log('Image dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
                                   }}
-                                  onError={(e) => {
-                                    console.log(`Avatar failed to load for ${token.fee_account}:`, e.target.src);
+                                  onError={async (e) => {
+                                    console.log(`❌ Avatar failed to load for ${token.fee_account}:`, e.target.src);
                                     
-                                    // Fetch and log raw response
-                                    fetch(e.target.src)
-                                      .then(async response => {
-                                        console.log('RAW RESPONSE:', response);
-                                        const text = await response.text();
-                                        console.log('RAW BODY:', text);
-                                      })
-                                      .catch(fetchError => {
-                                        console.log('FETCH ERROR:', fetchError);
+                                    try {
+                                      const response = await fetch(e.target.src, { method: 'GET' });
+                                      console.log('Response Headers:');
+                                      response.headers.forEach((value, key) => {
+                                        console.log(`${key}: ${value}`);
                                       });
-                                    
+
+                                      const text = await response.text();
+                                      console.log('Response Body:', text);
+                                    } catch (fetchError) {
+                                      console.log('Fetch Error:', fetchError);
+                                    }
+
                                     e.target.style.display = 'none';
                                   }}
                                 />

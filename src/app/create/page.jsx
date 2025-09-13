@@ -35,7 +35,7 @@ const PumpTokenCreator = () => {
     { id: 'metadata', label: 'Uploading Metadata', icon: '📝' },
     { id: 'token', label: 'Launching Token', icon: '🚀' },
     { id: 'saving', label: 'Saving Data', icon: '💾' },
-    { id: 'complete', label: 'Complete!', icon: '✅' }
+    { id: 'complete', label: 'Processing...', icon: '✅' }
   ];
 
   // Check if we're in development mode
