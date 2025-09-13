@@ -149,7 +149,7 @@ export default function Token() {
             <h1 className="text-4xl font-bold mb-2">{token.name}</h1>
             <p className="text-2xl text-gray-400 mb-4">${token.symbol}</p>
             {token.description && (
-              <p className="text-gray-300 leading-relaxed max-w-2xl mx-auto">{token.description}</p>
+              <p className="text-gray-300 leading-relaxed max-w-2xl mx-auto line-clamp-2 md:line-clamp-4">{token.description}</p>
             )}
           </div>
         </div>
@@ -178,35 +178,20 @@ export default function Token() {
             </div>
           </div>
 
-          <Link href={`https://x.com/${token.fee_account}`}>
-            {token.fee_account && (
-                <div className="bg-black rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-white px-3 py-1 rounded text-center flex justify-center items-center gap-2">
-                            {token.fee_account}
-                            <div className='text-3xl'>
-                                𝕏
-                            </div>
-                        </code>
-                    </div>
-                </div>
-            )}
-          </Link>
-
           {/* Social Links */}
           {(token.website_url || token.twitter_url || token.telegram_url) && (
-            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
-              <label className="text-sm text-gray-400 block mb-4 text-center">Social Links</label>
-              <div className="flex justify-center gap-4">
+            <div className="bg-[#1E1F26] rounded-lg p-3">
+              <label className="text-lg text-gray-400 block mb-2 text-center">Links</label>
+              <div className="flex justify-center gap-2">
                 {token.website_url && (
                   <a
                     href={token.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-lg"
                   >
                     <FiGlobe className="text-gray-300" />
-                    <span className="text-white">Website</span>
+                    <span className="text-white">site</span>
                     <FiExternalLink size={14} className="text-gray-400" />
                   </a>
                 )}
@@ -216,10 +201,9 @@ export default function Token() {
                     href={token.twitter_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-lg"
                   >
-                    <FiTwitter className="text-gray-300" />
-                    <span className="text-white">Twitter</span>
+                    <span className="text-white">𝕏</span>
                     <FiExternalLink size={14} className="text-gray-400" />
                   </a>
                 )}
@@ -239,6 +223,21 @@ export default function Token() {
               </div>
             </div>
           )}
+
+          <Link href={`https://x.com/${token.fee_account}`}>
+            {token.fee_account && (
+                <div className="bg-black rounded-lg p-3">
+                    <div className="flex items-center gap-2">
+                        <code className="flex-1 text-sm text-white px-3 py-1 rounded text-center flex justify-center items-center gap-2">
+                            {token.fee_account}
+                            <div className='text-3xl'>
+                                𝕏
+                            </div>
+                        </code>
+                    </div>
+                </div>
+            )}
+          </Link>
 
           <div className='w-full border-b-2 py-1 border-gray-700'></div>
 
