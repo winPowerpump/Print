@@ -490,7 +490,7 @@ export default function Claim() {
                 <div className='flex justify-center gap-2'>
                   <button
                     onClick={() => {
-                      window.open(`https://pump.fun/board`, "_blank"); // open Pump.fun board in new tab
+                      window.open(`https://pump.fun/${token.wallet_public_key}`, "_blank");
                     }}
                     className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
                   >
