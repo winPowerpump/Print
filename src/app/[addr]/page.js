@@ -156,13 +156,13 @@ export default function Token() {
         <div className="space-y-2 w-[30dvw]">
 
           <div className="bg-[#1E1F26] rounded-lg p-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 relative">
                 <div className="flex-1 text-sm text-gray-400 px-3 py-2 rounded text-center break-all">
                     {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
                 </div>
                 <button
                     onClick={() => copyToClipboard(token.mint_address, 'mint')}
-                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer absolute right-5"
                     title="Copy mint address"
                 >
                 {copiedField === 'mint' ? (
