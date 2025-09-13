@@ -155,7 +155,7 @@ export default function Token() {
         </div>
         <div className="space-y-2 w-[60dvw] md:w-[30dvw]">
 
-          <div className="bg-[#1E1F26] rounded-lg p-3">
+          <div className="bg-black rounded-lg p-3">
             <div className="flex items-center gap-2 relative">
                 <div className="flex-1 text-md md:text-xl text-gray-400 px-3 py-2 rounded text-center break-all">
                     {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
@@ -180,19 +180,17 @@ export default function Token() {
 
           {/* Social Links */}
           {(token.website_url || token.twitter_url || token.telegram_url) && (
-            <div className="bg-[#1E1F26] rounded-lg p-3">
-              <label className="text-lg text-gray-400 block mb-2 text-center">Links</label>
               <div className="flex justify-center gap-2">
                 {token.website_url && (
                   <a
                     href={token.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative"
                   >
                     <FiGlobe className="text-gray-300" />
                     <span className="text-white">site</span>
-                    <FiExternalLink size={14} className="text-gray-400" />
+                    <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
                   </a>
                 )}
                 
@@ -201,27 +199,13 @@ export default function Token() {
                     href={token.twitter_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 rounded-lg"
+                    className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative" 
                   >
-                    <span className="text-white">𝕏</span>
-                    <FiExternalLink size={14} className="text-gray-400" />
-                  </a>
-                )}
-                
-                {token.telegram_url && (
-                  <a
-                    href={token.telegram_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                  >
-                    <FaTelegram className="text-gray-300" />
-                    <span className="text-white">Telegram</span>
-                    <FiExternalLink size={14} className="text-gray-400" />
+                    <span className="text-white text-lg">𝕏</span>
+                    <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
                   </a>
                 )}
               </div>
-            </div>
           )}
 
           <Link href={`https://x.com/${token.fee_account}`}>
