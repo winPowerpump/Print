@@ -242,13 +242,22 @@ export async function POST(request) {
     const mintKeypair = Keypair.generate();
     console.log('Generated mint keypair:', mintKeypair.publicKey.toString());
     
+    // Determine Twitter URL for metadata - use provided or fallback to fee account profile
+    let metadataTwitterUrl = tokenData.twitter;
+    if (!metadataTwitterUrl && tokenData.directFeesTo) {
+      // Remove @ symbol from directFeesTo for Twitter URL
+      const handle = tokenData.directFeesTo.replace('@', '');
+      metadataTwitterUrl = `https://x.com/${handle}`;
+    }
+    
     const metadataFormData = new FormData();
     metadataFormData.append('name', tokenData.name);
     metadataFormData.append('symbol', tokenData.symbol);
     metadataFormData.append('description', tokenData.description);
-    metadataFormData.append('twitter', tokenData.twitter);
+    metadataFormData.append('twitter', metadataTwitterUrl || '');
     metadataFormData.append('telegram', tokenData.telegram);
-    metadataFormData.append('website', tokenData.website);
+    // Use custom token link instead of user's website for metadata
+    metadataFormData.append('website', `https://print-swart.vercel.app/${mintKeypair.publicKey.toString()}`);
     metadataFormData.append('showName', 'true');
     
     if (tokenData.image && tokenData.image.size > 0) {

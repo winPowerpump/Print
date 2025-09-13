@@ -350,7 +350,7 @@ const PumpTokenCreator = () => {
             transition={{ duration: 0.3 }}
             className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
           >
-            <div className="bg-red-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-md">
+            <div className="bg-orange-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-md">
               <FaClock />
               <div className="flex-1">
                 <span className="font-semibold block text-sm">
@@ -599,6 +599,7 @@ const PumpTokenCreator = () => {
                             placeholder="https://..."
                             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
+                          <p className="text-xs text-gray-500 mt-1">Saved for reference only. Token will link to print-swart.vercel.app</p>
                         </div>
                       </div>
                     </div>
