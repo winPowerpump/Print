@@ -25,9 +25,9 @@ export async function GET(request) {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    // Add fee_account filter for logged-in user
+    // Add fee_account filter for logged-in user (case-insensitive)
     if (feeAccount) {
-      query = query.eq('fee_account', feeAccount);
+      query = query.ilike('fee_account', feeAccount);
     }
 
     // Add other filters
