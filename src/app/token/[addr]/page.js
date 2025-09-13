@@ -86,7 +86,7 @@ export default function Token() {
       <div className="min-h-screen bg-[#15161B]">
         <Link
           href="/"
-          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500 hover:text-white transition-colors"
+          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
         >
           <IoMdArrowRoundBack size={30} />
         </Link>
@@ -105,7 +105,7 @@ export default function Token() {
       <div className="min-h-screen bg-[#15161B]">
         <Link
           href="/"
-          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500 hover:text-white transition-colors"
+          className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
         >
           <IoMdArrowRoundBack size={30} />
         </Link>
@@ -120,16 +120,14 @@ export default function Token() {
   }
 
   return (
-    <div className="min-h-screen bg-[#15161B] text-white">
+    <div className="min-h-screen bg-[#15161B] text-white flex items-center">
       {/* Header */}
-      <div className="relative px-6 py-8">
-        <Link
-          href="/"
-          className="absolute top-8 left-6 p-2 text-gray-500 rounded-lg"
-        >
-          <IoMdArrowRoundBack size={24} />
-        </Link>
-      </div>
+      <Link
+        href="/"
+        className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500 rounded-lg"
+      >
+        <IoMdArrowRoundBack size={30} />
+      </Link>
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 pb-12">
@@ -159,10 +157,10 @@ export default function Token() {
         {/* Full Width Sections */}
         <div className="space-y-6">
           {/* Mint Address */}
-          <div className="bg-gray-800/50 rounded-lg p-6">
+          <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
             <label className="text-sm text-gray-400 block mb-2 text-center">Mint Address</label>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+              <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
                 {token.mint_address}
               </code>
               <button
@@ -180,10 +178,10 @@ export default function Token() {
 
           {/* Fee Account */}
           {token.fee_account && (
-            <div className="bg-gray-800/50 rounded-lg p-6">
+            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
               <label className="text-sm text-gray-400 block mb-2 text-center">Fee Account</label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
                   {token.fee_account}
                 </code>
                 <button
@@ -202,10 +200,10 @@ export default function Token() {
 
           {/* Wallet ID */}
           {token.wallet_id && (
-            <div className="bg-gray-800/50 rounded-lg p-6">
+            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
               <label className="text-sm text-gray-400 block mb-2 text-center">Wallet ID</label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
                   {truncateAddress(token.wallet_id)}
                 </code>
                 <button
@@ -224,7 +222,7 @@ export default function Token() {
 
           {/* Social Links */}
           {(token.website_url || token.twitter_url || token.telegram_url) && (
-            <div className="bg-gray-800/50 rounded-lg p-6">
+            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
               <label className="text-sm text-gray-400 block mb-4 text-center">Social Links</label>
               <div className="flex justify-center gap-4">
                 {token.website_url && (
@@ -271,10 +269,10 @@ export default function Token() {
 
           {/* Transaction Signature */}
           {token.transaction_signature && (
-            <div className="bg-gray-800/50 rounded-lg p-6">
+            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
               <label className="text-sm text-gray-400 block mb-2 text-center">Transaction Signature</label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
                   {truncateAddress(token.transaction_signature, 16, 16)}
                 </code>
                 <button
