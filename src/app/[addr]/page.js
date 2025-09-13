@@ -272,6 +272,21 @@ export default function Token() {
             )}
           </Link>
 
+          <Link href={`https://axiom.trade/t/${token.mint_address}`} className="block">
+            {token.fee_account && (
+                <div className="bg-black rounded-lg p-2">
+                    <div className="flex items-center gap-2">
+                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                            <div className="flex justify-center items-center gap-2">
+                                <img src="axiom.png" className='size-7 rounded-full' />
+                                Buy on Axiom
+                            </div>
+                        </code>
+                    </div>
+                </div>
+            )}
+          </Link>
+
         </div>
       </div>
     </div>
