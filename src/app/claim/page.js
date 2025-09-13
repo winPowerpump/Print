@@ -494,14 +494,7 @@ export default function Claim() {
                     }}
                     className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center cursor-pointer hidden md:flex"
                   >
-                    {exportingTokens.has(token.id) ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
-                        claiming
-                      </>
-                    ) : (
-                      'claim rewards'
-                    )}
+                    claim rewards
                   </button>
                   <button
                     onClick={() => handleExport(token)}
