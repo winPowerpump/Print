@@ -13,7 +13,7 @@ export async function POST(request) {
     // Get the authenticated session
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user || !session.user.isTargetAccount) {
+    if (!session || !session.user) {
       return NextResponse.json(
         { error: 'Unauthorized - Invalid or missing authentication' },
         { status: 401 }
@@ -121,7 +121,7 @@ export async function GET(request) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user || !session.user.isTargetAccount) {
+    if (!session || !session.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
