@@ -385,7 +385,7 @@ const TokensList = () => {
                                   <img
                                     src={getTwitterProfileImage(token.fee_account)}
                                     alt={`${token.fee_account} profile`}
-                                    className="size-5 rounded-full border border-gray-600 hidden" 
+                                    className="size-5 rounded-full border border-gray-600 hidden"
                                     onLoad={(e) => {
                                       console.log(`✅ Avatar loaded successfully for ${token.fee_account}:`, e.target.src);
                                       console.log('Image dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
