@@ -412,7 +412,7 @@ export default function Claim() {
             <p className="text-gray-500 mt-2">Create your first token to get started!</p>
             <button 
               onClick={() => fetchUserTokens()}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="mt-4 px-4 py-2 bg-[#67D682] text-gray-900 rounded"
             >
               Refresh
             </button>
