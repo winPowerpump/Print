@@ -386,7 +386,7 @@ export default function Claim() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-900 border border-red-700 rounded-lg">
+        <div className="mb-6 p-4 bg-red-900 border border-red-700 rounded-lg hidden">
           <p className="text-red-300">Error: {error}</p>
           <button 
             onClick={() => fetchUserTokens()}
