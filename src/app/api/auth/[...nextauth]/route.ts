@@ -39,7 +39,6 @@ declare module "next-auth" {
       xUserId?: string
       xUsername?: string
       xVerified?: boolean
-      isTargetAccount?: boolean
     }
   }
 }
@@ -52,7 +51,6 @@ declare module "next-auth/jwt" {
     xName?: string
     xVerified?: boolean
     xProfileImage?: string
-    isTargetAccount?: boolean
   }
 }
 
@@ -87,21 +85,10 @@ export const authOptions: NextAuthOptions = {
         token.xVerified = userData.verified || false
         token.xProfileImage = userData.profile_image_url
         
-        // Check if this is the target account
-        const targetUsername = process.env.TARGET_X_USERNAME?.toLowerCase()
-        const targetUserId = process.env.TARGET_X_USER_ID
-        
-        const isTargetByUsername = token.xUsername?.toLowerCase() === targetUsername
-        const isTargetByUserId = token.xUserId === targetUserId
-        
-        token.isTargetAccount = isTargetByUsername || isTargetByUserId
-        
-        console.log('Verification result:', {
+        console.log('User authenticated:', {
           username: token.xUsername,
           userId: token.xUserId,
-          targetUsername,
-          targetUserId,
-          isTargetAccount: token.isTargetAccount
+          verified: token.xVerified
         })
       }
       return token
@@ -114,7 +101,6 @@ export const authOptions: NextAuthOptions = {
         session.user.xUserId = token.xUserId
         session.user.xUsername = token.xUsername
         session.user.xVerified = token.xVerified
-        session.user.isTargetAccount = token.isTargetAccount
         
         // Override NextAuth defaults with X data
         session.user.name = token.xName
@@ -124,17 +110,8 @@ export const authOptions: NextAuthOptions = {
     },
     
     async signIn({ user, account, profile }) {
-      // Optional: Block sign-in if not target account
-      // Uncomment the lines below to only allow the target account to sign in
-      
-      // const twitterProfile = profile as TwitterProfile
-      // const userData = twitterProfile?.data || twitterProfile
-      // const targetUsername = process.env.TARGET_X_USERNAME?.toLowerCase()
-      // const targetUserId = process.env.TARGET_X_USER_ID
-      // const isTarget = userData?.username?.toLowerCase() === targetUsername || userData?.id === targetUserId
-      // return isTarget
-      
-      return true // Allow all sign-ins for now
+      // Allow all sign-ins
+      return true
     }
   },
   pages: {
