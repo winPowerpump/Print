@@ -133,117 +133,110 @@ export default function Token() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-6 pb-12">
-        {/* Token Header */}
-        <div className="flex items-start just gap-6 mb-8">
+        {/* Token Header - Centered */}
+        <div className="flex flex-col items-center text-center mb-8">
           {token.image_uri && (
-            <div className="flex-shrink-0">
+            <div className="mb-6">
               <img
                 src={token.image_uri}
                 alt={token.name}
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-32 h-32 rounded-full object-cover"
                 onError={(e) => {
                   e.target.src = '/placeholder-token.png';
                 }}
               />
             </div>
           )}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold">{token.name}</h1>
-            </div>
-            <p className="text-xl text-gray-400 mb-4">${token.symbol}</p>
+          <div>
+            <h1 className="text-4xl font-bold mb-2">{token.name}</h1>
+            <p className="text-2xl text-gray-400 mb-4">${token.symbol}</p>
             {token.description && (
-              <p className="text-gray-300 leading-relaxed">{token.description}</p>
+              <p className="text-gray-300 leading-relaxed max-w-2xl mx-auto">{token.description}</p>
             )}
           </div>
         </div>
 
-        {/* Token Details Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          {/* Addresses */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Addresses</h2>
-            
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <label className="text-sm text-gray-400 block mb-2">Mint Address</label>
+        {/* Full Width Sections */}
+        <div className="space-y-6">
+          {/* Mint Address */}
+          <div className="bg-gray-800/50 rounded-lg p-6">
+            <label className="text-sm text-gray-400 block mb-2 text-center">Mint Address</label>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                {token.mint_address}
+              </code>
+              <button
+                onClick={() => copyToClipboard(token.mint_address, 'mint')}
+                className="p-2 text-gray-400 hover:text-white transition-colors"
+                title="Copy mint address"
+              >
+                <IoMdCopy size={18} />
+              </button>
+              {copiedField === 'mint' && (
+                <span className="text-green-400 text-sm">Copied!</span>
+              )}
+            </div>
+          </div>
+
+          {/* Fee Account */}
+          {token.fee_account && (
+            <div className="bg-gray-800/50 rounded-lg p-6">
+              <label className="text-sm text-gray-400 block mb-2 text-center">Fee Account</label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded">
-                  {truncateAddress(token.mint_address, 12, 12)}
+                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                  {token.fee_account}
                 </code>
                 <button
-                  onClick={() => copyToClipboard(token.mint_address, 'mint')}
+                  onClick={() => copyToClipboard(token.fee_account, 'fee')}
                   className="p-2 text-gray-400 hover:text-white transition-colors"
-                  title="Copy mint address"
+                  title="Copy fee account"
                 >
                   <IoMdCopy size={18} />
                 </button>
-                {copiedField === 'mint' && (
+                {copiedField === 'fee' && (
                   <span className="text-green-400 text-sm">Copied!</span>
                 )}
               </div>
             </div>
+          )}
 
-            {token.fee_account && (
-              <div className="bg-gray-800/50 rounded-lg p-4">
-                <label className="text-sm text-gray-400 block mb-2">Fee Account</label>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded">
-                    {token.fee_account}
-                  </code>
-                  <button
-                    onClick={() => copyToClipboard(token.fee_account, 'fee')}
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
-                    title="Copy fee account"
-                  >
-                    <IoMdCopy size={18} />
-                  </button>
-                  {copiedField === 'fee' && (
-                    <span className="text-green-400 text-sm">Copied!</span>
-                  )}
-                </div>
+          {/* Wallet ID */}
+          {token.wallet_id && (
+            <div className="bg-gray-800/50 rounded-lg p-6">
+              <label className="text-sm text-gray-400 block mb-2 text-center">Wallet ID</label>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                  {truncateAddress(token.wallet_id)}
+                </code>
+                <button
+                  onClick={() => copyToClipboard(token.wallet_id, 'wallet')}
+                  className="p-2 text-gray-400 hover:text-white transition-colors"
+                  title="Copy wallet ID"
+                >
+                  <IoMdCopy size={18} />
+                </button>
+                {copiedField === 'wallet' && (
+                  <span className="text-green-400 text-sm">Copied!</span>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
-            {token.wallet_id && (
-              <div className="bg-gray-800/50 rounded-lg p-4">
-                <label className="text-sm text-gray-400 block mb-2">Wallet ID</label>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded">
-                    {truncateAddress(token.wallet_id)}
-                  </code>
-                  <button
-                    onClick={() => copyToClipboard(token.wallet_id, 'wallet')}
-                    className="p-2 text-gray-400 hover:text-white transition-colors"
-                    title="Copy wallet ID"
-                  >
-                    <IoMdCopy size={18} />
-                  </button>
-                  {copiedField === 'wallet' && (
-                    <span className="text-green-400 text-sm">Copied!</span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Social Links & Metadata */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Links & Info</h2>
-            
-            {/* Social Links */}
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <label className="text-sm text-gray-400 block mb-3">Social Links</label>
-              <div className="space-y-2">
+          {/* Social Links */}
+          {(token.website_url || token.twitter_url || token.telegram_url) && (
+            <div className="bg-gray-800/50 rounded-lg p-6">
+              <label className="text-sm text-gray-400 block mb-4 text-center">Social Links</label>
+              <div className="flex justify-center gap-4">
                 {token.website_url && (
                   <a
                     href={token.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-2 hover:bg-gray-700/50 rounded transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    <FiGlobe className="text-gray-400" />
-                    <span className="text-blue-400 hover:text-blue-300">Website</span>
-                    <FiExternalLink size={14} className="text-gray-500" />
+                    <FiGlobe className="text-gray-300" />
+                    <span className="text-white">Website</span>
+                    <FiExternalLink size={14} className="text-gray-400" />
                   </a>
                 )}
                 
@@ -252,11 +245,11 @@ export default function Token() {
                     href={token.twitter_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-2 hover:bg-gray-700/50 rounded transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    <FiTwitter className="text-gray-400" />
-                    <span className="text-blue-400 hover:text-blue-300">Twitter</span>
-                    <FiExternalLink size={14} className="text-gray-500" />
+                    <FiTwitter className="text-gray-300" />
+                    <span className="text-white">Twitter</span>
+                    <FiExternalLink size={14} className="text-gray-400" />
                   </a>
                 )}
                 
@@ -265,63 +258,39 @@ export default function Token() {
                     href={token.telegram_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-2 hover:bg-gray-700/50 rounded transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    <FaTelegram className="text-gray-400" />
-                    <span className="text-blue-400 hover:text-blue-300">Telegram</span>
-                    <FiExternalLink size={14} className="text-gray-500" />
+                    <FaTelegram className="text-gray-300" />
+                    <span className="text-white">Telegram</span>
+                    <FiExternalLink size={14} className="text-gray-400" />
                   </a>
                 )}
+              </div>
+            </div>
+          )}
 
-                {!token.website_url && !token.twitter_url && !token.telegram_url && (
-                  <p className="text-gray-500 text-sm">No social links available</p>
+          {/* Transaction Signature */}
+          {token.transaction_signature && (
+            <div className="bg-gray-800/50 rounded-lg p-6">
+              <label className="text-sm text-gray-400 block mb-2 text-center">Transaction Signature</label>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded text-center">
+                  {truncateAddress(token.transaction_signature, 16, 16)}
+                </code>
+                <button
+                  onClick={() => copyToClipboard(token.transaction_signature, 'tx')}
+                  className="p-2 text-gray-400 hover:text-white transition-colors"
+                  title="Copy transaction signature"
+                >
+                  <IoMdCopy size={18} />
+                </button>
+                {copiedField === 'tx' && (
+                  <span className="text-green-400 text-sm">Copied!</span>
                 )}
               </div>
             </div>
-
-            {/* Metadata */}
-            <div className="bg-gray-800/50 rounded-lg p-4">
-              <label className="text-sm text-gray-400 block mb-3">Metadata</label>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Created</span>
-                  <span className="text-gray-200">{formatDate(token.created_at)}</span>
-                </div>
-                {token.wallet_public_key && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Public Key</span>
-                    <span className="text-gray-200 font-mono text-sm">
-                      {truncateAddress(token.wallet_public_key)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
-
-        {/* Transaction Signature */}
-        {token.transaction_signature && (
-          <div className="bg-gray-800/50 rounded-lg p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">Transaction Details</h2>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-400 min-w-0">Transaction Signature:</label>
-              <code className="flex-1 text-sm font-mono text-gray-200 bg-gray-900 px-3 py-2 rounded min-w-0">
-                {truncateAddress(token.transaction_signature, 16, 16)}
-              </code>
-              <button
-                onClick={() => copyToClipboard(token.transaction_signature, 'tx')}
-                className="p-2 text-gray-400 hover:text-white transition-colors"
-                title="Copy transaction signature"
-              >
-                <IoMdCopy size={18} />
-              </button>
-              {copiedField === 'tx' && (
-                <span className="text-green-400 text-sm">Copied!</span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
