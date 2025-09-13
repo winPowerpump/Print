@@ -239,6 +239,21 @@ export default function Token() {
 
           <div className='w-full border-b-2 py-1 border-gray-700'></div>
 
+          <Link href={`https://pump.fun/coin/${token.mint_address}`} className="block">
+            {token.fee_account && (
+                <div className="bg-black rounded-lg p-3">
+                    <div className="flex items-center gap-2">
+                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                            <div className="flex justify-center items-center gap-2">
+                                <img src="pill.png" className='size-8' />
+                                View on pump
+                            </div>
+                        </code>
+                    </div>
+                </div>
+            )}
+          </Link>
+
           <Link href="https://jup.ag/" className="block">
             {token.fee_account && (
                 <div className="bg-black rounded-lg p-3">
