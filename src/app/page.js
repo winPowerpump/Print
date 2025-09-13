@@ -64,7 +64,7 @@ function AnimatedWord() {
 
 function BackgroundMarquee() {
   return (
-    <div className="absolute w-[100dvw] inset-0 translate-y-16 overflow-hidden pointer-events-none z-10 hidden lg:block">
+    <div className="fixed inset-0 translate-y-[200px] overflow-hidden pointer-events-none z-10 hidden lg:block">
       <Marquee 
         speed={150}
         gradient={false}
@@ -122,11 +122,7 @@ export default function Home() {
             {/* Background Marquee */}
             <BackgroundMarquee />
             
-            <div className='w-full md:w-[50%] bg-[#15161B] relative z-20' 
-              style={{
-                maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-              }}> 
+            <div className='w-full md:w-[50%] bg-[#15161B] relative z-20 lg:[mask-image:linear-gradient(to_right,transparent_0%,black_10%,black_90%,transparent_100%)] lg:[webkit-mask-image:linear-gradient(to_right,transparent_0%,black_10%,black_90%,transparent_100%)]'> 
               <div className="relative z-20">
                 <div className='w-full flex justify-center mb-1'> 
                   <motion.div 
