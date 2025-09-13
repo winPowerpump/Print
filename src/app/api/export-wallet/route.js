@@ -46,7 +46,7 @@ export async function POST(request) {
       .from('tokens')
       .select('*')
       .eq('id', tokenId)
-      .eq('fee_account', `@${userXUsername}`)
+      .ilike('fee_account', `@${userXUsername}`)
       .single();
 
     if (tokenError || !token) {
@@ -145,7 +145,7 @@ export async function GET(request) {
       .from('tokens')
       .select('id, name, symbol, status, wallet_id')
       .eq('id', tokenId)
-      .eq('fee_account', `@${userXUsername}`)
+      .ilike('fee_account', `@${userXUsername}`)
       .single();
 
     if (tokenError || !token) {
