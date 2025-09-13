@@ -492,7 +492,7 @@ export default function Claim() {
                     onClick={() => {
                       window.open(`https://pump.fun/profile/${token.wallet_public_key}?tab=coins`, "_blank");
                     }}
-                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center cursor-pointer hidden md:flex"
                   >
                     {exportingTokens.has(token.id) ? (
                       <>
@@ -500,7 +500,7 @@ export default function Claim() {
                         claiming
                       </>
                     ) : (
-                      'rewards'
+                      'claim rewards'
                     )}
                   </button>
                   <button
