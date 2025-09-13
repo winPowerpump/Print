@@ -182,8 +182,11 @@ export default function Token() {
             {token.fee_account && (
                 <div className="bg-black rounded-lg p-3">
                     <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-white px-3 py-2 rounded text-center">
+                        <code className="flex-1 text-sm text-white px-3 py-2 rounded text-center flex justify-center items-center gap-2">
                             {token.fee_account}
+                            <div className='text-3xl'>
+                                𝕏
+                            </div>
                         </code>
                     </div>
                 </div>
