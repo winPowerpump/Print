@@ -245,7 +245,7 @@ const TokensList = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-center mx-[5%] xl:mx-[10%]'>
               {tokens.map((token) => (
                 // Fixed version of your token card component
-                <Link key={token.id} href={`/token/${token.mint_address}`}>
+                <Link key={token.id} href={`/${token.mint_address}`}>
                   <motion.div
                     initial={{ opacity: 0, y: 0 }}
                     animate={{ opacity: 1, y: 0 }}
