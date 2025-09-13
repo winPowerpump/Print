@@ -408,8 +408,7 @@ export default function Claim() {
           </div>
         ) : tokens.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">No tokens found for your account.</p>
-            <p className="text-gray-500 mt-2">Create your first token to get started!</p>
+            <p className="text-gray-400 text-lg">No tokens found for your account</p>
             <button 
               onClick={() => fetchUserTokens()}
               className="mt-4 px-4 py-2 bg-[#67D682] text-gray-900 rounded cursor-pointer"
