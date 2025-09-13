@@ -153,7 +153,7 @@ export default function Token() {
             )}
           </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 w-[30dvw]">
 
           <div className="bg-[#1E1F26] rounded-lg p-3">
             <div className="flex items-center gap-2">
