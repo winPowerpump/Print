@@ -357,7 +357,7 @@ const PumpTokenCreator = () => {
                   Rate Limited
                 </span>
                 <span className="text-xs opacity-90">
-                  Wait {rateLimitError.remainingMinutes} minutes to create another token
+                  Wait {rateLimitError.remainingMinutes} minutes
                 </span>
               </div>
               <button
