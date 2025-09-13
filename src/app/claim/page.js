@@ -500,7 +500,7 @@ export default function Claim() {
                         claiming
                       </>
                     ) : (
-                      'claim rewards'
+                      'rewards'
                     )}
                   </button>
                   <button
