@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaCheck, FaSpinner } from "react-icons/fa";
+import { FaChevronDown, FaCheck, FaSpinner, FaClock } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
 
@@ -21,6 +21,7 @@ const PumpTokenCreator = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [rateLimitError, setRateLimitError] = useState(null);
   const [tokenData, setTokenData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
@@ -55,6 +56,17 @@ const PumpTokenCreator = () => {
       return () => clearTimeout(timer);
     }
   }, [success, loading]);
+
+  // Auto-hide rate limit error after some time
+  useEffect(() => {
+    if (rateLimitError) {
+      const timer = setTimeout(() => {
+        setRateLimitError(null);
+      }, 10000); // 10 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [rateLimitError]);
 
   const updateStepStatus = (stepId, status, delay = 0) => {
     setTimeout(() => {
@@ -160,6 +172,7 @@ const PumpTokenCreator = () => {
 
     setLoading(true);
     setError('');
+    setRateLimitError(null);
     setSuccess(false);
     setCurrentStep(0);
     setStepStatuses({});
@@ -192,6 +205,19 @@ const PumpTokenCreator = () => {
       });
 
       const result = await response.json();
+
+      // Handle rate limiting specifically
+      if (response.status === 429) {
+        setRateLimitError({
+          message: result.error,
+          remainingMinutes: result.remainingMinutes,
+          lastCreation: result.lastCreation
+        });
+        setLoading(false);
+        setCurrentStep(0);
+        setStepStatuses({});
+        return;
+      }
 
       if (!response.ok || !result.success) {
         throw new Error(result.error || `API Error: ${response.status}`);
@@ -276,9 +302,19 @@ const PumpTokenCreator = () => {
     }, 6000);
   };
 
+  // Test rate limit error
+  const testRateLimit = () => {
+    setRateLimitError({
+      message: "Rate limit exceeded. You can create another token in 5 minutes.",
+      remainingMinutes: 5,
+      lastCreation: new Date().toISOString()
+    });
+  };
+
   const resetForm = () => {
     setSuccess(false);
     setError('');
+    setRateLimitError(null);
     setTokenData(null);
     setWalletData(null);
     setCurrentStep(0);
@@ -301,12 +337,43 @@ const PumpTokenCreator = () => {
   return (
     <div className="min-h-screen bg-[#15161B] p-4 flex items-center">
       <div className='absolute bottom-3 -translate-x-1/2 left-1/2 text-gray-500 hidden md:flex justify-center items-center'>
-        powered by <a href="https://pump.fun/board"><img src="pill.png" className='w-12' /></a>
+        powered by <a href="https://pump.fun/board"><img src="pill.png" className='w-12' alt="Pump.fun" /></a>
       </div>
+
+      {/* Rate Limit Error Toast */}
+      <AnimatePresence>
+        {rateLimitError && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
+          >
+            <div className="bg-red-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-md">
+              <FaClock />
+              <div className="flex-1">
+                <span className="font-semibold block text-sm">
+                  Rate Limited
+                </span>
+                <span className="text-xs opacity-90">
+                  Wait {rateLimitError.remainingMinutes} minutes to create another token
+                </span>
+              </div>
+              <button
+                onClick={() => setRateLimitError(null)}
+                className="text-white hover:text-gray-200 text-lg font-bold ml-2"
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Progress and Success Toast */}
       <AnimatePresence>
-        {(loading || success) && (
+        {(loading || success) && !rateLimitError && (
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -324,7 +391,7 @@ const PumpTokenCreator = () => {
                   transition={{ duration: 0.2 }}
                   className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
                 >
-                  <div className="animate-spin rounded-full size-5 border-2 border-gray-300 border-t-[#67D682]"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-[#67D682]"></div>
                   <span className="font-semibold">
                     {steps[currentStep]?.label || 'Processing...'}
                   </span>
@@ -371,7 +438,7 @@ const PumpTokenCreator = () => {
         )}
       </AnimatePresence>
 
-      <div className="w-xl mx-auto">
+      <div className="w-full max-w-xl mx-auto">
         <Link
           href="/"
           className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
@@ -397,7 +464,7 @@ const PumpTokenCreator = () => {
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             {/* Image and Name/Ticker split layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Image section - left half */}
@@ -543,13 +610,18 @@ const PumpTokenCreator = () => {
             <button
               type="button"
               onClick={createPumpToken}
-              disabled={loading || !formData.name || !formData.symbol}
+              disabled={loading || !formData.name || !formData.symbol || rateLimitError}
               className="w-full bg-[#67D682] text-white py-4 px-6 rounded-lg font-bold text-lg transform hover:scale-[101%] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center cursor-pointer"
             >
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 mr-2 border-2 border-gray-300 border-t-[#67D682]"></div>
                   Creating...
+                </>
+              ) : rateLimitError ? (
+                <>
+                  <FaClock className="mr-2" />
+                  Rate Limited ({rateLimitError.remainingMinutes}m)
                 </>
               ) : (
                 'Create'
@@ -565,6 +637,13 @@ const PumpTokenCreator = () => {
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Test Progress Toast (Dev Only)
+                </button>
+                <button
+                  type="button"
+                  onClick={testRateLimit}
+                  className="w-full bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                >
+                  Test Rate Limit Error (Dev Only)
                 </button>
                 <button
                   type="button"

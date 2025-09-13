@@ -11,10 +11,97 @@ const supabase = createClient(
 // Initialize Solana connection
 const connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com');
 
+// Rate limiting constants
+const RATE_LIMIT_MINUTES = 7;
+const RATE_LIMIT_MS = RATE_LIMIT_MINUTES * 60 * 1000; // 7 minutes in milliseconds
+
+// Helper function to get client IP address
+function getClientIP(request) {
+  // Try multiple headers in order of preference
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const realIP = request.headers.get('x-real-ip');
+  const cfConnectingIP = request.headers.get('cf-connecting-ip'); // Cloudflare
+  
+  if (forwardedFor) {
+    // x-forwarded-for can contain multiple IPs, get the first one
+    return forwardedFor.split(',')[0].trim();
+  }
+  
+  if (cfConnectingIP) return cfConnectingIP;
+  if (realIP) return realIP;
+  
+  return 'unknown';
+}
+
+// Rate limiting check function
+async function checkRateLimit(clientIP) {
+  const now = new Date();
+  const rateLimitCutoff = new Date(now.getTime() - RATE_LIMIT_MS);
+
+  try {
+    // Check for recent token creations from this IP
+    const { data: recentTokens, error } = await supabase
+      .from('tokens')
+      .select('created_at')
+      .eq('creator_ip', clientIP)
+      .gte('created_at', rateLimitCutoff.toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.error('Rate limit check error:', error);
+      // If we can't check rate limit, allow the request but log the error
+      return { allowed: true, error: 'Rate limit check failed' };
+    }
+
+    if (recentTokens && recentTokens.length > 0) {
+      const lastCreation = new Date(recentTokens[0].created_at);
+      const timeSinceLastCreation = now - lastCreation;
+      const remainingTime = RATE_LIMIT_MS - timeSinceLastCreation;
+
+      return {
+        allowed: false,
+        remainingTime: Math.ceil(remainingTime / 1000 / 60), // Convert to minutes
+        lastCreation: lastCreation.toISOString()
+      };
+    }
+
+    return { allowed: true };
+  } catch (error) {
+    console.error('Rate limit check error:', error);
+    return { allowed: true, error: 'Rate limit check failed' };
+  }
+}
+
 export async function POST(request) {
   let walletId = null; // Track wallet ID for logging activities
   
   try {
+    // Get client IP for rate limiting
+    const clientIP = getClientIP(request);
+    console.log('Request from IP:', clientIP);
+
+    // Check rate limit
+    const rateLimitResult = await checkRateLimit(clientIP);
+    
+    if (!rateLimitResult.allowed) {
+      console.log(`Rate limit exceeded for IP: ${clientIP}, remaining time: ${rateLimitResult.remainingTime} minutes`);
+      
+      return NextResponse.json(
+        { 
+          error: `Rate limit exceeded. You can create another token in ${rateLimitResult.remainingTime} minutes.`,
+          rateLimited: true,
+          remainingMinutes: rateLimitResult.remainingTime,
+          lastCreation: rateLimitResult.lastCreation
+        },
+        { status: 429 } // Too Many Requests
+      );
+    }
+
+    if (rateLimitResult.error) {
+      console.warn('Rate limit check warning:', rateLimitResult.error);
+    }
+
     const formData = await request.formData();
     
     // Extract form data
@@ -70,12 +157,12 @@ export async function POST(request) {
 
     // Step 2: IMMEDIATELY save wallet securely to database
     const walletInfo = {
-      public_key: walletResult.walletPublicKey,  // Use direct field from PumpPortal
-      private_key: walletResult.privateKey,      // Use direct field from PumpPortal
-      api_key: walletResult.apiKey,              // Use direct field from PumpPortal
+      public_key: walletResult.walletPublicKey,
+      private_key: walletResult.privateKey,
+      api_key: walletResult.apiKey,
       initial_balance_sol: 0,
       created_at: new Date().toISOString(),
-      creator_ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+      creator_ip: clientIP, // Use the extracted IP
       is_active: true,
       notes: `Created for token: ${tokenData.name} (${tokenData.symbol})`
     };
@@ -108,7 +195,6 @@ export async function POST(request) {
     console.log('Funding new wallet with 0.025 SOL...');
     
     const fundingKeypair = Keypair.fromSecretKey(bs58.decode(fundingWalletPrivateKey));
-    // 🔧 FIX: Use walletResult.walletPublicKey instead of newWallet.publicKey
     const newWalletPubkey = new PublicKey(walletResult.walletPublicKey);
     
     const fundingAmount = 0.025 * LAMPORTS_PER_SOL;
@@ -205,7 +291,6 @@ export async function POST(request) {
 
     console.log('Creating token with secure wallet...');
 
-    // 🔧 FIX: Use walletResult.apiKey instead of newWallet.apiKey
     const createResponse = await fetch(`https://pumpportal.fun/api/trade?api-key=${walletResult.apiKey}`, {
       method: 'POST',
       headers: {
@@ -275,9 +360,9 @@ export async function POST(request) {
       raw_response: result,
       // Safe wallet reference (no sensitive data)
       wallet_id: walletId,
-      // 🔧 FIX: Use walletResult.walletPublicKey instead of newWallet.publicKey
       wallet_public_key: walletResult.walletPublicKey, // Safe to store public key
-      creator_ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+      creator_ip: clientIP, // Use the extracted IP
+      created_at: new Date().toISOString() // Ensure we have creation timestamp for rate limiting
     };
 
     const { data: savedToken, error: tokenError } = await supabase
@@ -315,7 +400,6 @@ export async function POST(request) {
       success: true,
       wallet: {
         id: walletId,
-        // 🔧 FIX: Use walletResult.walletPublicKey instead of newWallet.publicKey
         publicKey: walletResult.walletPublicKey, // Safe to return
         fundingSignature: fundingSignature
         // NOTE: privateKey and apiKey are NOT returned for security
