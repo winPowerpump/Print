@@ -487,20 +487,37 @@ export default function Claim() {
 
               {/* Right side - Export button */}
               <div className="flex flex-col gap-2">
-                <button
-                  onClick={() => handleExport(token)}
-                  disabled={exportingTokens.has(token.id)}
-                  className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
-                >
-                  {exportingTokens.has(token.id) ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
-                      exporting
-                    </>
-                  ) : (
-                    'export wallet'
-                  )}
-                </button>
+                <div className='flex justify-center gap-2'>
+                  <button
+                    onClick={() => {
+                      window.open(`https://pump.fun/board`, "_blank"); // open Pump.fun board in new tab
+                    }}
+                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                  >
+                    {exportingTokens.has(token.id) ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        claiming
+                      </>
+                    ) : (
+                      'claim rewards'
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handleExport(token)}
+                    disabled={exportingTokens.has(token.id)}
+                    className="px-3 py-1 mt-4 bg-[#67D682] text-gray-900 rounded-lg flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+                  >
+                    {exportingTokens.has(token.id) ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        exporting
+                      </>
+                    ) : (
+                      'export wallet'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
