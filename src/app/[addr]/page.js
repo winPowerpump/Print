@@ -153,33 +153,34 @@ export default function Token() {
             )}
           </div>
         </div>
+        <div className="space-y-4">
 
-        {/* Full Width Sections */}
-        <div className="space-y-6">
-          {/* Mint Address */}
-          <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
-            <label className="text-sm text-gray-400 block mb-2 text-center">Mint Address</label>
+          <div className="bg-[#1E1F26] rounded-lg p-3">
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
-                {token.mint_address}
-              </code>
-              <button
-                onClick={() => copyToClipboard(token.mint_address, 'mint')}
-                className="p-2 text-gray-400 hover:text-white transition-colors"
-                title="Copy mint address"
-              >
-                <IoMdCopy size={18} />
-              </button>
-              {copiedField === 'mint' && (
-                <span className="text-green-400 text-sm">Copied!</span>
-              )}
+                <div className="flex-1 text-sm text-gray-400 px-3 py-2 rounded text-center break-all">
+                    {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
+                </div>
+                <button
+                    onClick={() => copyToClipboard(token.mint_address, 'mint')}
+                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                    title="Copy mint address"
+                >
+                {copiedField === 'mint' ? (
+                    <svg className="size-[20px] text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                ) : (
+                    <svg className="size-[20px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                )}
+                </button>
             </div>
           </div>
 
           {/* Fee Account */}
           {token.fee_account && (
-            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
-              <label className="text-sm text-gray-400 block mb-2 text-center">Fee Account</label>
+            <div className="bg-black rounded-lg p-3">
               <div className="flex items-center gap-2">
                 <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
                   {token.fee_account}
@@ -189,33 +190,16 @@ export default function Token() {
                   className="p-2 text-gray-400 hover:text-white transition-colors"
                   title="Copy fee account"
                 >
-                  <IoMdCopy size={18} />
+                    {copiedField === 'fee' ? (
+                        <svg className="size-[20px] text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                    ) : (
+                        <svg className="size-[20px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    )}
                 </button>
-                {copiedField === 'fee' && (
-                  <span className="text-green-400 text-sm">Copied!</span>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Wallet ID */}
-          {token.wallet_id && (
-            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
-              <label className="text-sm text-gray-400 block mb-2 text-center">Wallet ID</label>
-              <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
-                  {truncateAddress(token.wallet_id)}
-                </code>
-                <button
-                  onClick={() => copyToClipboard(token.wallet_id, 'wallet')}
-                  className="p-2 text-gray-400 hover:text-white transition-colors"
-                  title="Copy wallet ID"
-                >
-                  <IoMdCopy size={18} />
-                </button>
-                {copiedField === 'wallet' && (
-                  <span className="text-green-400 text-sm">Copied!</span>
-                )}
               </div>
             </div>
           )}
@@ -267,27 +251,6 @@ export default function Token() {
             </div>
           )}
 
-          {/* Transaction Signature */}
-          {token.transaction_signature && (
-            <div className="bg-[#1E1F26] border border-gray-700 rounded-lg p-6">
-              <label className="text-sm text-gray-400 block mb-2 text-center">Transaction Signature</label>
-              <div className="flex items-center gap-2">
-                <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
-                  {truncateAddress(token.transaction_signature, 16, 16)}
-                </code>
-                <button
-                  onClick={() => copyToClipboard(token.transaction_signature, 'tx')}
-                  className="p-2 text-gray-400 hover:text-white transition-colors"
-                  title="Copy transaction signature"
-                >
-                  <IoMdCopy size={18} />
-                </button>
-                {copiedField === 'tx' && (
-                  <span className="text-green-400 text-sm">Copied!</span>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
