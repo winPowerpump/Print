@@ -80,7 +80,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className='absolute top-5 md:top-6 right-[9%]'>
+        <div className='absolute top-5 right-[9%]'>
           <Link
             href="/claim"
             className="px-4 py-2 text-gray-900 mb-2 bg-[#67D682] rounded-lg text-sm"
