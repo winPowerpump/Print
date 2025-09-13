@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import XVerification from './components/XVerification'
-import ProtectedContent from './components/ProtectedContent'
 import TokensList from './components/TokensList'
 import Link from 'next/link'
 
@@ -136,27 +135,6 @@ export default function Home() {
           <div className='w-full'>
             <TokensList />
           </div>
-        </div>
-        
-        {/* Protected Content - Repositioned */}
-        <div className='fixed bottom-4 right-4 z-40 hidden'>
-          <ProtectedContent>
-            <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg max-w-sm">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-1">
-                  Verified User
-                </h2>
-                <p className="text-sm text-gray-600">
-                  Welcome back!
-                </p>
-              </div>
-            </div>
-          </ProtectedContent>
         </div>
       </div>
     </div>
