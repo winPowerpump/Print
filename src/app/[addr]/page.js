@@ -153,7 +153,7 @@ export default function Token() {
             )}
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-2">
 
           <div className="bg-[#1E1F26] rounded-lg p-3">
             <div className="flex items-center gap-2">
@@ -181,11 +181,11 @@ export default function Token() {
           <Link href={`https://x.com/${token.fee_account}`}>
             {token.fee_account && (
                 <div className="bg-black rounded-lg p-3">
-                <div className="flex items-center gap-2">
-                    <code className="flex-1 text-sm font-mono text-gray-200 px-3 py-2 rounded text-center">
-                    {token.fee_account}
-                    </code>
-                </div>
+                    <div className="flex items-center gap-2">
+                        <code className="flex-1 text-sm text-white px-3 py-2 rounded text-center">
+                            {token.fee_account}
+                        </code>
+                    </div>
                 </div>
             )}
           </Link>
@@ -236,6 +236,20 @@ export default function Token() {
               </div>
             </div>
           )}
+
+          <div className='w-full border-b-2 py-1 border-gray-700'></div>
+
+          <Link href="https://jup.ag/" className="block">
+            {token.fee_account && (
+                <div className="bg-black rounded-lg p-3">
+                    <div className="flex items-center gap-2">
+                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                            Buy on Jupiter
+                        </code>
+                    </div>
+                </div>
+            )}
+          </Link>
 
         </div>
       </div>
