@@ -157,7 +157,7 @@ export default function Token() {
 
           <div className="bg-[#1E1F26] rounded-lg p-3">
             <div className="flex items-center gap-2 relative">
-                <div className="flex-1 text-sm text-gray-400 px-3 py-2 rounded text-center break-all">
+                <div className="flex-1 text-md md:text-xl text-gray-400 px-3 py-2 rounded text-center break-all">
                     {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
                 </div>
                 <button
