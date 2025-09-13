@@ -199,21 +199,6 @@ const TokensList = () => {
           />
         </div>
 
-        {/* Status Filter - 15% on mobile, 10% on desktop */}
-        <div className="relative w-[15%] md:w-[10%]">
-          <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs md:text-sm" />
-          <select
-            value={filters.status}
-            onChange={(e) => handleFilterChange('status', e.target.value)}
-            className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg pl-10 pr-4 py-2 text-gray-300 focus:outline-none focus:border-blue-500 appearance-none"
-          >
-            <option value="all">All</option>
-            <option value="created">Created</option>
-            <option value="pending">Pending</option>
-            <option value="failed">Failed</option>
-          </select>
-        </div>
-
         {/* Refresh Button - 10% on mobile, 5% on desktop */}
         <button
           onClick={fetchTokens}

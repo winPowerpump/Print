@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import XVerification from './components/XVerification'
 import TokensList from './components/TokensList'
 import Link from 'next/link'
+import Marquee from 'react-fast-marquee'
 
 const words = ['creators.', 'causes.', 'people.', 'projects.', 'anything.']
 
@@ -61,6 +62,31 @@ function AnimatedWord() {
   )
 }
 
+function BackgroundMarquee() {
+  return (
+    <div className="absolute w-[100dvw] inset-0 translate-y-16 overflow-hidden pointer-events-none z-10 hidden lg:block">
+      <Marquee 
+        speed={150}
+        gradient={false}
+        className="text-6xl md:text-8xl font-black text-white/5 select-none"
+      >
+        <span className="mx-8">LAUNCH</span>
+        <span className="mx-8">•</span>
+        <span className="mx-8">CREATE</span>
+        <span className="mx-8">•</span>
+        <span className="mx-8">PRINT</span>
+        <span className="mx-8">•</span>
+        <span className="mx-8">LAUNCH</span>
+        <span className="mx-8">•</span>
+        <span className="mx-8">CREATE</span>
+        <span className="mx-8">•</span>
+        <span className="mx-8">PRINT</span>
+        <span className="mx-8">•</span>
+      </Marquee>
+    </div>
+  )
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#15161B] py-12 px-4">
@@ -92,45 +118,40 @@ export default function Home() {
 
         {/* Main Content */}
         <div className='grid items-start mt-[7.5%] md:mt-[5%] gap-2'>
-          {/* Hero Section */}
-          <div className='w-full'>
-            <div className='w-full flex justify-center mb-1'>
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatType: "reverse"
-                }}
-                style={{
-                  willChange: "transform, opacity",
-                  backfaceVisibility: "hidden",
-                  perspective: 1000
-                }}
-                className="transform-gpu"
-              >
-                <Link
-                  href="/create"
-                  className="inline-block px-4 py-2 text-gray-300 font-medium mb-2 text-xl hover:text-white transition-colors"
-                >
-                  [create]
-                </Link>
-              </motion.div>
-            </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[20%] whitespace-nowrap'>
-              Launch for your
-            </div>
-            <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 mx-[5%] md:mx-[10%] -translate-x-[5.75%]'>
-              favorite <AnimatedWord />
-            </div>
-            <div className='text-center text-sm md:text-base text-balance text-gray-300 mb-4 mx-[20%]'>
-              they get the fees, it&apos;s time they printed
+          <div className='w-full flex justify-center relative'>
+            {/* Background Marquee */}
+            <BackgroundMarquee />
+            
+            <div className='w-full md:w-[50%] bg-[#15161B] relative z-20' 
+              style={{
+                maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+              }}> 
+              <div className="relative z-20">
+                <div className='w-full flex justify-center mb-1'> 
+                  <motion.div 
+                    animate={{ scale: [1, 1.05, 1], }} 
+                    transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", repeatType: "reverse" }} 
+                    style={{ willChange: "transform, opacity", backfaceVisibility: "hidden", perspective: 1000 }} 
+                    className="transform-gpu" 
+                  > 
+                    <Link href="/create" className="inline-block px-4 py-2 text-gray-300 font-medium mb-2 text-xl hover:text-white transition-colors" > 
+                      [create] 
+                    </Link> 
+                  </motion.div> 
+                </div> 
+                <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 whitespace-nowrap'> 
+                  Launch for your 
+                </div> 
+                <div className='text-center text-4xl md:text-6xl text-balance font-bold text-white mb-2 -translate-x-[1.75%] md:-translate-x-[9.75%]'> 
+                  favorite <AnimatedWord /> 
+                </div> 
+                <div className='text-center text-sm md:text-base text-balance text-gray-300 mb-4 mx-[20%]'> 
+                  they get the fees, it&apos;s time they printed 
+                </div> 
+              </div>
             </div>
           </div>
-
           {/* Tokens List Section */}
           <div className='w-full'>
             <TokensList />
