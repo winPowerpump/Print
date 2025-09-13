@@ -153,7 +153,7 @@ export default function Token() {
             )}
           </div>
         </div>
-        <div className="space-y-2 w-[30dvw]">
+        <div className="space-y-2 w-[60dvw] md:w-[30dvw]">
 
           <div className="bg-[#1E1F26] rounded-lg p-3">
             <div className="flex items-center gap-2 relative">
@@ -162,7 +162,7 @@ export default function Token() {
                 </div>
                 <button
                     onClick={() => copyToClipboard(token.mint_address, 'mint')}
-                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer absolute right-5"
+                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer absolute right-2 md:right-5"
                     title="Copy mint address"
                 >
                 {copiedField === 'mint' ? (
