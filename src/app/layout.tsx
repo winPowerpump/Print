@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Printed',
-  description: 'Direct fees to your favorite creators',
+  description: 'Launch for your favorite creators',
 }
 
 export default function RootLayout({
