@@ -244,7 +244,10 @@ export default function Token() {
                 <div className="bg-black rounded-lg p-3">
                     <div className="flex items-center gap-2">
                         <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
-                            Buy on Jupiter
+                            <div className="flex justify-center items-center gap-2">
+                                <img src="logo.png" className='size-7' />
+                                Buy on Jupiter
+                            </div>
                         </code>
                     </div>
                 </div>
