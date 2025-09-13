@@ -120,7 +120,7 @@ export default function Token() {
   }
 
   return (
-    <div className="min-h-screen bg-[#15161B] text-white flex items-center">
+    <div className="min-h-screen bg-[#15161B] text-white flex items-start">
       {/* Header */}
       <Link
         href="/"
@@ -130,7 +130,7 @@ export default function Token() {
       </Link>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 pb-12">
+      <div className="max-w-4xl mx-auto px-6 pb-12 mt-[15%] md:mt-[10%]">
         {/* Token Header - Centered */}
         <div className="flex flex-col items-center text-center mb-8">
           {token.image_uri && (
