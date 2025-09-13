@@ -379,7 +379,7 @@ const PumpTokenCreator = () => {
           <IoMdArrowRoundBack size={30} />
         </Link>
 
-        <div className="bg-[#15161B] border border-[#2F3036] rounded-2xl p-8">
+        <div className="bg-[#15161B] md:border md:border-[#2F3036] rounded-2xl p-8 mt-[7.5%]">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
               <span className="text-red-600 font-semibold mr-2">!</span>

@@ -374,8 +374,24 @@ const TokensList = () => {
                                   src={getTwitterProfileImage(token.fee_account)}
                                   alt={`${token.fee_account} profile`}
                                   className="size-5 rounded-full border border-gray-600" 
+                                  onLoad={(e) => {
+                                    console.log(`✅ Avatar loaded successfully for ${token.fee_account}:`, e.target.src);
+                                    console.log('Image dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
+                                  }}
                                   onError={(e) => {
-                                    // Hide image if it fails to load
+                                    console.log(`Avatar failed to load for ${token.fee_account}:`, e.target.src);
+                                    
+                                    // Fetch and log raw response
+                                    fetch(e.target.src)
+                                      .then(async response => {
+                                        console.log('RAW RESPONSE:', response);
+                                        const text = await response.text();
+                                        console.log('RAW BODY:', text);
+                                      })
+                                      .catch(fetchError => {
+                                        console.log('FETCH ERROR:', fetchError);
+                                      });
+                                    
                                     e.target.style.display = 'none';
                                   }}
                                 />
