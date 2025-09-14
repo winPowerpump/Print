@@ -116,7 +116,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#15161B] py-12 px-4">
       <div className='absolute bottom-4 left-4 hidden xl:block'>
-        <Copy contractAddress="forpump" />
+        <Copy contractAddress="EvtbRUmtAyGLSMNmdJwUxQTS61T54VdSm5RksMZ8pump" />
       </div>
       <div className="max-w-7xl mx-auto">
         <div className="absolute top-0 left-[9%]">
