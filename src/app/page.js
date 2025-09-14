@@ -138,7 +138,7 @@ export default function Home() {
           <div className='flex justify-center items-center gap-2'>
             <Link
               href="https://x.com/printedwtf"
-              className="py-2 text-white mb-[10px] rounded-lg text-base font-medium"
+              className="py-2 text-white mb-[9.5px] rounded-lg text-base font-medium"
             >
               𝕏
             </Link>
