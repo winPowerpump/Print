@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import XVerification from './components/XVerification'
 import TokensList from './components/TokensList'
+import Copy from './components/copy.js'
 import Link from 'next/link'
 import Marquee from 'react-fast-marquee'
 
@@ -114,6 +115,9 @@ function BackgroundMarquee() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#15161B] py-12 px-4">
+      <div className='absolute bottom-4 left-4 hidden xl:block'>
+        <Copy contractAddress="forpump" />
+      </div>
       <div className="max-w-7xl mx-auto">
         <div className="absolute top-0 left-[9%]">
           <img src="/print.png" className='w-[75px] h-auto' />
@@ -133,8 +137,14 @@ export default function Home() {
         <div className='absolute top-5 right-[9%]'>
           <div className='flex justify-center items-center gap-2'>
             <Link
+              href="https://x.com/printedwtf"
+              className="py-2 text-white mb-[10px] rounded-lg text-base font-medium"
+            >
+              𝕏
+            </Link>
+            <Link
               href="/FAQ"
-              className="px-4 py-2 text-white mb-2 rounded-lg text-sm font-medium"
+              className="pr-2 pl-1 py-2 text-white mb-2 rounded-lg text-sm font-medium"
             >
               FAQs
             </Link>
