@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaChevronDown, FaCheck, FaSpinner } from "react-icons/fa";
+import { FaChevronDown, FaCheck, FaSpinner, FaClock } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import Link from 'next/link';
 
@@ -21,6 +21,7 @@ const PumpTokenCreator = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [rateLimitError, setRateLimitError] = useState(null);
   const [tokenData, setTokenData] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
@@ -35,7 +36,7 @@ const PumpTokenCreator = () => {
     { id: 'metadata', label: 'Uploading Metadata', icon: '📝' },
     { id: 'token', label: 'Launching Token', icon: '🚀' },
     { id: 'saving', label: 'Saving Data', icon: '💾' },
-    { id: 'complete', label: 'Complete!', icon: '✅' }
+    { id: 'complete', label: 'Processing', icon: '✅' }
   ];
 
   // Check if we're in development mode
@@ -55,6 +56,17 @@ const PumpTokenCreator = () => {
       return () => clearTimeout(timer);
     }
   }, [success, loading]);
+
+  // Auto-hide rate limit error after some time
+  useEffect(() => {
+    if (rateLimitError) {
+      const timer = setTimeout(() => {
+        setRateLimitError(null);
+      }, 10000); // 10 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [rateLimitError]);
 
   const updateStepStatus = (stepId, status, delay = 0) => {
     setTimeout(() => {
@@ -82,28 +94,28 @@ const PumpTokenCreator = () => {
       updateStepStatus('funding', 'complete');
       setCurrentStep(2);
       updateStepStatus('metadata', 'loading');
-    }, 2000);
+    }, 3500);
 
     // Simulate token launch
     setTimeout(() => {
       updateStepStatus('metadata', 'complete');
       setCurrentStep(3);
       updateStepStatus('token', 'loading');
-    }, 3500);
+    }, 5000);
 
     // Simulate saving
     setTimeout(() => {
       updateStepStatus('token', 'complete');
       setCurrentStep(4);
       updateStepStatus('saving', 'loading');
-    }, 5000);
+    }, 5500);
 
     // Complete
     setTimeout(() => {
       updateStepStatus('saving', 'complete');
       setCurrentStep(5);
       updateStepStatus('complete', 'complete');
-    }, 5500);
+    }, 6000);
   };
 
   const handleInputChange = (e) => {
@@ -112,6 +124,30 @@ const PumpTokenCreator = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Special handler for the directFeesTo field to auto-add @
+  const handleDirectFeesToChange = (e) => {
+    let value = e.target.value;
+    
+    // If user types something and it doesn't start with @, add it
+    if (value && !value.startsWith('@')) {
+      value = '@' + value;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      directFeesTo: value
+    }));
+  };
+
+  // Function to ensure @ prefix when saving/submitting
+  const getDirectFeesToValue = () => {
+    const value = formData.directFeesTo.trim();
+    if (value && !value.startsWith('@')) {
+      return '@' + value;
+    }
+    return value;
   };
 
   const handleImageChange = (e) => {
@@ -136,6 +172,7 @@ const PumpTokenCreator = () => {
 
     setLoading(true);
     setError('');
+    setRateLimitError(null);
     setSuccess(false);
     setCurrentStep(0);
     setStepStatuses({});
@@ -154,7 +191,8 @@ const PumpTokenCreator = () => {
       apiFormData.append('twitter', formData.twitter);
       apiFormData.append('telegram', formData.telegram);
       apiFormData.append('website', formData.website);
-      apiFormData.append('directFeesTo', formData.directFeesTo);
+      // Use the function to ensure @ prefix when submitting
+      apiFormData.append('directFeesTo', getDirectFeesToValue());
       
       if (formData.image) {
         apiFormData.append('image', formData.image);
@@ -167,6 +205,19 @@ const PumpTokenCreator = () => {
       });
 
       const result = await response.json();
+
+      // Handle rate limiting specifically
+      if (response.status === 429) {
+        setRateLimitError({
+          message: result.error,
+          remainingMinutes: result.remainingMinutes,
+          lastCreation: result.lastCreation
+        });
+        setLoading(false);
+        setCurrentStep(0);
+        setStepStatuses({});
+        return;
+      }
 
       if (!response.ok || !result.success) {
         throw new Error(result.error || `API Error: ${response.status}`);
@@ -251,9 +302,19 @@ const PumpTokenCreator = () => {
     }, 6000);
   };
 
+  // Test rate limit error
+  const testRateLimit = () => {
+    setRateLimitError({
+      message: "Rate limit exceeded. You can create another token in 5 minutes.",
+      remainingMinutes: 5,
+      lastCreation: new Date().toISOString()
+    });
+  };
+
   const resetForm = () => {
     setSuccess(false);
     setError('');
+    setRateLimitError(null);
     setTokenData(null);
     setWalletData(null);
     setCurrentStep(0);
@@ -276,140 +337,108 @@ const PumpTokenCreator = () => {
   return (
     <div className="min-h-screen bg-[#15161B] p-4 flex items-center">
       <div className='absolute bottom-3 -translate-x-1/2 left-1/2 text-gray-500 hidden md:flex justify-center items-center'>
-        powered by <a href="https://pump.fun/board"><img src="pill.png" className='w-12' /></a>
+        powered by <a href="https://pump.fun/board"><img src="pill.png" className='w-12' alt="Pump.fun" /></a>
       </div>
 
-      {/* Progress Toast */}
+      {/* Rate Limit Error Toast */}
       <AnimatePresence>
-        {(loading || success) && (
+        {rateLimitError && (
           <motion.div
-            initial={{ opacity: 0, y: -50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -50, scale: 0.9 }}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-96"
+            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
           >
-            <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-white font-bold text-lg">
-                    {loading ? 'Creating Token...' : 'Token Created! 🎉'}
-                  </h3>
+            <div className="bg-red-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-md">
+              <FaClock />
+              <div className="flex-1">
+                <span className="font-semibold block text-sm">
+                  Rate Limited
+                </span>
+                <span className="text-xs opacity-90">
+                  Wait {rateLimitError.remainingMinutes} minutes
+                </span>
+              </div>
+              <button
+                onClick={() => setRateLimitError(null)}
+                className="text-white hover:text-gray-200 text-lg font-bold ml-2"
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Progress and Success Toast */}
+      <AnimatePresence>
+        {(loading || success) && !rateLimitError && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
+          >
+            <AnimatePresence mode="wait">
+              {loading && (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
+                >
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-[#67D682]"></div>
+                  <span className="font-semibold">
+                    {steps[currentStep]?.label || 'Processing...'}
+                  </span>
+                </motion.div>
+              )}
+              
+              {success && tokenData && !loading && (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-green-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3"
+                >
+                  <FaCheck />
+                  <span className="font-semibold">
+                    {tokenData.tokenName} ({tokenData.tokenSymbol}) created!
+                  </span>
+                  {tokenData.mint && tokenData.mint !== 'Unknown' && (
+                    <a
+                      href={isDevelopment ? 'https://pump.fun/board' : `https://pump.fun/${tokenData.mint}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white text-green-500 px-3 py-1 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors"
+                    >
+                      View
+                    </a>
+                  )}
                   <button
                     onClick={() => {
                       setSuccess(false);
                       setLoading(false);
                       resetForm();
                     }}
-                    className="text-white hover:text-gray-200 text-xl font-bold"
+                    className="text-white hover:text-gray-200 text-lg font-bold"
                   >
                     ×
                   </button>
-                </div>
-                {tokenData && (
-                  <p className="text-white/90 text-sm mt-1">
-                    {tokenData.tokenName} ({tokenData.tokenSymbol})
-                  </p>
-                )}
-              </div>
-
-              {/* Progress Steps */}
-              <div className="p-4">
-                <div className="space-y-3">
-                  {steps.map((step, index) => {
-                    const status = stepStatuses[step.id];
-                    const isActive = index === currentStep;
-                    const isComplete = status === 'complete';
-                    const isLoading = status === 'loading' || isActive;
-
-                    return (
-                      <motion.div
-                        key={step.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className={`flex items-center space-x-3 p-2 rounded-lg transition-all ${
-                          isComplete ? 'bg-green-50' : 
-                          isLoading ? 'bg-blue-50' : 'bg-gray-50'
-                        }`}
-                      >
-                        <div className="flex-shrink-0">
-                          {getStepIcon(step, index)}
-                        </div>
-                        <span className={`font-medium ${
-                          isComplete ? 'text-green-700' :
-                          isLoading ? 'text-blue-700' : 'text-gray-600'
-                        }`}>
-                          {step.label}
-                        </span>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-
-                {/* Success Actions */}
-                {success && tokenData && !loading && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="mt-4 pt-4 border-t border-gray-200"
-                  >
-                    <div className="grid grid-cols-2 gap-2">
-                      {tokenData.mint && tokenData.mint !== 'Unknown' && (
-                        <a
-                          href={isDevelopment ? 'https://pump.fun/board' : `https://pump.fun/${tokenData.mint}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:from-green-600 hover:to-emerald-700 transition-all text-center"
-                        >
-                          View Token
-                        </a>
-                      )}
-                      {walletData && walletData.publicKey && (
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(walletData.publicKey);
-                            alert('Wallet address copied!');
-                          }}
-                          className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:from-blue-600 hover:to-purple-700 transition-all"
-                        >
-                          Copy Wallet
-                        </button>
-                      )}
-                    </div>
-                    
-                    {/* Additional Info */}
-                    <div className="mt-3 text-xs text-gray-500 space-y-1">
-                      {tokenData.signature && (
-                        <div>
-                          <span className="font-medium">Tx:</span> 
-                          <span className="font-mono ml-1">
-                            {tokenData.signature.substring(0, 8)}...
-                            {tokenData.signature.substring(-8)}
-                          </span>
-                        </div>
-                      )}
-                      {walletData && walletData.fundingSignature && (
-                        <div>
-                          <span className="font-medium">Funding:</span> 
-                          <span className="font-mono ml-1">
-                            {walletData.fundingSignature.substring(0, 8)}...
-                            {walletData.fundingSignature.substring(-8)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="w-xl mx-auto">
+      <div className="w-full max-w-xl mx-auto">
         <Link
           href="/"
           className="absolute top-[3%] left-[3%] px-4 py-2 text-gray-500"
@@ -417,7 +446,7 @@ const PumpTokenCreator = () => {
           <IoMdArrowRoundBack size={30} />
         </Link>
 
-        <div className="bg-[#15161B] border border-[#2F3036] rounded-2xl p-8">
+        <div className="bg-[#15161B] md:border md:border-[#2F3036] rounded-2xl p-8 mt-[7.5%]">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
               <span className="text-red-600 font-semibold mr-2">!</span>
@@ -435,7 +464,7 @@ const PumpTokenCreator = () => {
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             {/* Image and Name/Ticker split layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Image section - left half */}
@@ -490,7 +519,7 @@ const PumpTokenCreator = () => {
                     placeholder="PRINTED"
                     required
                     maxLength="10"
-                    className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 uppercase"
+                    className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -502,7 +531,7 @@ const PumpTokenCreator = () => {
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Tell the world about your token..."
+                placeholder="Tell the world about this token..."
                 rows={1}
                 maxLength="500"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
@@ -511,12 +540,12 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-2">Fee Account*</label>
+              <label className="block text-gray-400 font-semibold mb-2">Send Fees*</label>
               <input
                 type="text"
                 name="directFeesTo"
                 value={formData.directFeesTo}
-                onChange={handleInputChange}
+                onChange={handleDirectFeesToChange}
                 placeholder="@printedwtf"
                 className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-4 py-3 text-gray-500 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
@@ -570,6 +599,7 @@ const PumpTokenCreator = () => {
                             placeholder="https://..."
                             className="w-full bg-[#24252B] border border-[#2F3036] rounded-lg px-3 py-2 text-gray-400 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                           />
+                          <p className="text-xs text-gray-500 mt-1">saved for printed token page</p>
                         </div>
                       </div>
                     </div>
@@ -581,16 +611,21 @@ const PumpTokenCreator = () => {
             <button
               type="button"
               onClick={createPumpToken}
-              disabled={loading || !formData.name || !formData.symbol}
+              disabled={loading || !formData.name || !formData.symbol || rateLimitError}
               className="w-full bg-[#67D682] text-white py-4 px-6 rounded-lg font-bold text-lg transform hover:scale-[101%] transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center cursor-pointer"
             >
               {loading ? (
                 <>
-                  <FaSpinner className="w-5 h-5 mr-2 animate-spin" />
-                  Creating Token...
+                  <div className="animate-spin rounded-full h-5 w-5 mr-2 border-2 border-gray-300 border-t-[#67D682]"></div>
+                  Creating...
+                </>
+              ) : rateLimitError ? (
+                <>
+                  <FaClock className="mr-2" />
+                  Rate Limited ({rateLimitError.remainingMinutes}m)
                 </>
               ) : (
-                'Create Token'
+                'Create'
               )}
             </button>
 
@@ -603,6 +638,13 @@ const PumpTokenCreator = () => {
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Test Progress Toast (Dev Only)
+                </button>
+                <button
+                  type="button"
+                  onClick={testRateLimit}
+                  className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                >
+                  Test Rate Limit Error (Dev Only)
                 </button>
                 <button
                   type="button"

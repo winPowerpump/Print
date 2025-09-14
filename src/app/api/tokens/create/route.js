@@ -15,6 +15,10 @@ const connection = new Connection(process.env.SOLANA_RPC_URL || 'https://api.mai
 const RATE_LIMIT_MINUTES = 7;
 const RATE_LIMIT_MS = RATE_LIMIT_MINUTES * 60 * 1000; // 7 minutes in milliseconds
 
+// Fee account rate limiting constants
+const FEE_ACCOUNT_DAILY_LIMIT = 2;
+const FEE_ACCOUNT_RATE_LIMIT_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 // Helper function to get client IP address
 function getClientIP(request) {
   // Try multiple headers in order of preference
@@ -33,7 +37,7 @@ function getClientIP(request) {
   return 'unknown';
 }
 
-// Rate limiting check function
+// Rate limiting check function for IP
 async function checkRateLimit(clientIP) {
   const now = new Date();
   const rateLimitCutoff = new Date(now.getTime() - RATE_LIMIT_MS);
@@ -73,6 +77,67 @@ async function checkRateLimit(clientIP) {
   }
 }
 
+// New function to check fee account rate limiting
+async function checkFeeAccountRateLimit(feeAccount) {
+  if (!feeAccount || feeAccount.trim() === '') {
+    return { allowed: true };
+  }
+
+  const now = new Date();
+  const dailyRateLimitCutoff = new Date(now.getTime() - FEE_ACCOUNT_RATE_LIMIT_MS);
+
+  try {
+    // Normalize fee account (remove @ symbol and convert to lowercase for comparison)
+    const normalizedFeeAccount = feeAccount.replace('@', '').toLowerCase();
+
+    // Check for recent token creations for this fee account in the last 24 hours
+    const { data: recentTokens, error } = await supabase
+      .from('tokens')
+      .select('created_at, fee_account')
+      .not('fee_account', 'is', null)
+      .gte('created_at', dailyRateLimitCutoff.toISOString())
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Fee account rate limit check error:', error);
+      // If we can't check rate limit, allow the request but log the error
+      return { allowed: true, error: 'Fee account rate limit check failed' };
+    }
+
+    // Filter tokens that match the normalized fee account
+    const matchingTokens = recentTokens?.filter(token => {
+      if (!token.fee_account) return false;
+      const normalizedDbFeeAccount = token.fee_account.replace('@', '').toLowerCase();
+      return normalizedDbFeeAccount === normalizedFeeAccount;
+    }) || [];
+
+    if (matchingTokens.length >= FEE_ACCOUNT_DAILY_LIMIT) {
+      // Find the oldest token creation to calculate when the limit resets
+      const oldestTokenTime = new Date(matchingTokens[matchingTokens.length - 1].created_at);
+      const resetTime = new Date(oldestTokenTime.getTime() + FEE_ACCOUNT_RATE_LIMIT_MS);
+      const hoursUntilReset = Math.ceil((resetTime - now) / (1000 * 60 * 60));
+
+      return {
+        allowed: false,
+        currentCount: matchingTokens.length,
+        dailyLimit: FEE_ACCOUNT_DAILY_LIMIT,
+        hoursUntilReset: Math.max(1, hoursUntilReset), // At least 1 hour
+        resetTime: resetTime.toISOString(),
+        feeAccount: feeAccount
+      };
+    }
+
+    return { 
+      allowed: true, 
+      currentCount: matchingTokens.length,
+      dailyLimit: FEE_ACCOUNT_DAILY_LIMIT 
+    };
+  } catch (error) {
+    console.error('Fee account rate limit check error:', error);
+    return { allowed: true, error: 'Fee account rate limit check failed' };
+  }
+}
+
 export async function POST(request) {
   let walletId = null; // Track wallet ID for logging activities
   
@@ -80,27 +145,6 @@ export async function POST(request) {
     // Get client IP for rate limiting
     const clientIP = getClientIP(request);
     console.log('Request from IP:', clientIP);
-
-    // Check rate limit
-    const rateLimitResult = await checkRateLimit(clientIP);
-    
-    if (!rateLimitResult.allowed) {
-      console.log(`Rate limit exceeded for IP: ${clientIP}, remaining time: ${rateLimitResult.remainingTime} minutes`);
-      
-      return NextResponse.json(
-        { 
-          error: `Rate limit exceeded. You can create another token in ${rateLimitResult.remainingTime} minutes.`,
-          rateLimited: true,
-          remainingMinutes: rateLimitResult.remainingTime,
-          lastCreation: rateLimitResult.lastCreation
-        },
-        { status: 429 } // Too Many Requests
-      );
-    }
-
-    if (rateLimitResult.error) {
-      console.warn('Rate limit check warning:', rateLimitResult.error);
-    }
 
     const formData = await request.formData();
     
@@ -122,6 +166,53 @@ export async function POST(request) {
         { error: 'Name and symbol are required' },
         { status: 400 }
       );
+    }
+
+    // Check IP-based rate limit first
+    const rateLimitResult = await checkRateLimit(clientIP);
+    
+    if (!rateLimitResult.allowed) {
+      console.log(`IP rate limit exceeded for IP: ${clientIP}, remaining time: ${rateLimitResult.remainingTime} minutes`);
+      
+      return NextResponse.json(
+        { 
+          error: `Rate limit exceeded. You can create another token in ${rateLimitResult.remainingTime} minutes.`,
+          rateLimited: true,
+          rateLimitType: 'ip',
+          remainingMinutes: rateLimitResult.remainingTime,
+          lastCreation: rateLimitResult.lastCreation
+        },
+        { status: 429 } // Too Many Requests
+      );
+    }
+
+    // Check fee account rate limit if fee account is provided
+    const feeAccountRateLimitResult = await checkFeeAccountRateLimit(tokenData.directFeesTo);
+    
+    if (!feeAccountRateLimitResult.allowed) {
+      console.log(`Fee account rate limit exceeded for: ${tokenData.directFeesTo}, tokens created: ${feeAccountRateLimitResult.currentCount}/${feeAccountRateLimitResult.dailyLimit}`);
+      
+      return NextResponse.json(
+        { 
+          error: `Daily limit exceeded for ${feeAccountRateLimitResult.feeAccount}. This account has created ${feeAccountRateLimitResult.currentCount}/${feeAccountRateLimitResult.dailyLimit} tokens today. Try again in ${feeAccountRateLimitResult.hoursUntilReset} hours.`,
+          rateLimited: true,
+          rateLimitType: 'feeAccount',
+          feeAccount: feeAccountRateLimitResult.feeAccount,
+          currentCount: feeAccountRateLimitResult.currentCount,
+          dailyLimit: feeAccountRateLimitResult.dailyLimit,
+          hoursUntilReset: feeAccountRateLimitResult.hoursUntilReset,
+          resetTime: feeAccountRateLimitResult.resetTime
+        },
+        { status: 429 } // Too Many Requests
+      );
+    }
+
+    if (rateLimitResult.error) {
+      console.warn('Rate limit check warning:', rateLimitResult.error);
+    }
+
+    if (feeAccountRateLimitResult.error) {
+      console.warn('Fee account rate limit check warning:', feeAccountRateLimitResult.error);
     }
 
     const fundingWalletPrivateKey = process.env.FUNDING_WALLET_PRIVATE_KEY;
@@ -423,6 +514,12 @@ export async function POST(request) {
         tokenSymbol: tokenInfo.symbol,
         walletUsed: walletResult.walletPublicKey,
         rawResponse: result
+      },
+      // Include rate limit status for fee account
+      rateLimitStatus: {
+        feeAccount: tokenData.directFeesTo,
+        currentCount: (feeAccountRateLimitResult.currentCount || 0) + 1, // Add 1 for the token just created
+        dailyLimit: feeAccountRateLimitResult.dailyLimit
       }
     });
 

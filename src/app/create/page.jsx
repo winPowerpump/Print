@@ -62,7 +62,7 @@ const PumpTokenCreator = () => {
     if (rateLimitError) {
       const timer = setTimeout(() => {
         setRateLimitError(null);
-      }, 10000); // 10 seconds
+      }, 15000); // 15 seconds for fee account errors (longer because they're more serious)
       
       return () => clearTimeout(timer);
     }
@@ -164,6 +164,27 @@ const PumpTokenCreator = () => {
     }
   };
 
+  // Function to get rate limit display info
+  const getRateLimitDisplayInfo = (rateLimitError) => {
+    if (rateLimitError.rateLimitType === 'feeAccount') {
+      return {
+        title: 'Fee Account Limited',
+        message: `${rateLimitError.feeAccount} has reached its daily limit (${rateLimitError.currentCount}/${rateLimitError.dailyLimit} tokens)`,
+        timeInfo: `Resets in ${rateLimitError.hoursUntilReset} hours`,
+        icon: <FaClock />,
+        bgColor: 'bg-orange-500'
+      };
+    } else {
+      return {
+        title: 'Rate Limited',
+        message: 'Too many requests from your IP',
+        timeInfo: `Wait ${rateLimitError.remainingMinutes} minutes`,
+        icon: <FaClock />,
+        bgColor: 'bg-red-500'
+      };
+    }
+  };
+
   const createPumpToken = async () => {
     if (!formData.name || !formData.symbol) {
       setError('Name and symbol are required');
@@ -211,7 +232,14 @@ const PumpTokenCreator = () => {
         setRateLimitError({
           message: result.error,
           remainingMinutes: result.remainingMinutes,
-          lastCreation: result.lastCreation
+          lastCreation: result.lastCreation,
+          rateLimitType: result.rateLimitType || 'ip',
+          // Fee account specific fields
+          feeAccount: result.feeAccount,
+          currentCount: result.currentCount,
+          dailyLimit: result.dailyLimit,
+          hoursUntilReset: result.hoursUntilReset,
+          resetTime: result.resetTime
         });
         setLoading(false);
         setCurrentStep(0);
@@ -302,12 +330,26 @@ const PumpTokenCreator = () => {
     }, 6000);
   };
 
-  // Test rate limit error
+  // Test rate limit error (IP-based)
   const testRateLimit = () => {
     setRateLimitError({
       message: "Rate limit exceeded. You can create another token in 5 minutes.",
       remainingMinutes: 5,
-      lastCreation: new Date().toISOString()
+      lastCreation: new Date().toISOString(),
+      rateLimitType: 'ip'
+    });
+  };
+
+  // Test fee account rate limit error
+  const testFeeAccountRateLimit = () => {
+    setRateLimitError({
+      message: "Daily limit exceeded for @testaccount. This account has created 2/2 tokens today. Try again in 8 hours.",
+      rateLimitType: 'feeAccount',
+      feeAccount: '@testaccount',
+      currentCount: 2,
+      dailyLimit: 2,
+      hoursUntilReset: 8,
+      resetTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString()
     });
   };
 
@@ -350,15 +392,20 @@ const PumpTokenCreator = () => {
             transition={{ duration: 0.3 }}
             className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"
           >
-            <div className="bg-red-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-md">
-              <FaClock />
+            <div className={`${getRateLimitDisplayInfo(rateLimitError).bgColor} text-white px-6 py-3 rounded-full shadow-lg flex items-center space-x-3 max-w-lg`}>
+              {getRateLimitDisplayInfo(rateLimitError).icon}
               <div className="flex-1">
                 <span className="font-semibold block text-sm">
-                  Rate Limited
+                  {getRateLimitDisplayInfo(rateLimitError).title}
                 </span>
                 <span className="text-xs opacity-90">
-                  Wait {rateLimitError.remainingMinutes} minutes
+                  {getRateLimitDisplayInfo(rateLimitError).timeInfo}
                 </span>
+                {rateLimitError.rateLimitType === 'feeAccount' && (
+                  <div className="text-xs opacity-75 mt-1">
+                    Account: {rateLimitError.feeAccount} ({rateLimitError.currentCount}/{rateLimitError.dailyLimit} daily)
+                  </div>
+                )}
               </div>
               <button
                 onClick={() => setRateLimitError(null)}
@@ -540,7 +587,10 @@ const PumpTokenCreator = () => {
             </div>
 
             <div>
-              <label className="block text-gray-400 font-semibold mb-2">Send Fees*</label>
+              <label className="block text-gray-400 font-semibold mb-2">
+                Send Fees*
+                <span className="text-xs text-gray-500 ml-2">(2 tokens max per day per account)</span>
+              </label>
               <input
                 type="text"
                 name="directFeesTo"
@@ -622,7 +672,10 @@ const PumpTokenCreator = () => {
               ) : rateLimitError ? (
                 <>
                   <FaClock className="mr-2" />
-                  Rate Limited ({rateLimitError.remainingMinutes}m)
+                  {rateLimitError.rateLimitType === 'feeAccount' ? 
+                    `Account Limited (${rateLimitError.hoursUntilReset}h)` : 
+                    `Rate Limited (${rateLimitError.remainingMinutes}m)`
+                  }
                 </>
               ) : (
                 'Create'
@@ -644,7 +697,14 @@ const PumpTokenCreator = () => {
                   onClick={testRateLimit}
                   className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
                 >
-                  Test Rate Limit Error (Dev Only)
+                  Test IP Rate Limit Error (Dev Only)
+                </button>
+                <button
+                  type="button"
+                  onClick={testFeeAccountRateLimit}
+                  className="w-full bg-orange-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+                >
+                  Test Fee Account Rate Limit (Dev Only)
                 </button>
                 <button
                   type="button"
