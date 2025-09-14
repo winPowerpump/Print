@@ -257,7 +257,7 @@ export async function POST(request) {
     metadataFormData.append('twitter', metadataTwitterUrl || '');
     metadataFormData.append('telegram', tokenData.telegram);
     // Use custom token link instead of user's website for metadata
-    metadataFormData.append('website', `https://print-swart.vercel.app/${mintKeypair.publicKey.toString()}`);
+    metadataFormData.append('website', `https://printed.wtf/${mintKeypair.publicKey.toString()}`);
     metadataFormData.append('showName', 'true');
     
     if (tokenData.image && tokenData.image.size > 0) {
