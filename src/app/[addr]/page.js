@@ -189,7 +189,9 @@ export default function Token() {
                       href={token.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative"
+                      className={`flex items-center px-4 py-3 bg-black rounded-lg relative ${
+                        (token.website_url && token.twitter_url) ? 'gap-2 w-1/2' : 'gap-2 w-full justify-center'
+                      }`}
                     >
                       <FiGlobe className="text-gray-300" />
                       <span className="text-white">site</span>
@@ -202,7 +204,9 @@ export default function Token() {
                       href={token.twitter_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative" 
+                      className={`flex items-center px-4 py-3 bg-black rounded-lg relative ${
+                        (token.website_url && token.twitter_url) ? 'gap-2 w-1/2' : 'gap-2 w-full justify-center'
+                      }`}
                     >
                       <span className="text-white text-lg">𝕏</span>
                       <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
@@ -213,7 +217,8 @@ export default function Token() {
 
             <Link href={`https://x.com/${token.fee_account}`}>
               {token.fee_account && (
-                  <div className="bg-black rounded-lg p-3">
+                  <div className="bg-black rounded-lg p-3 relative">
+                      <div className="absolute top-2 left-2 text-xs md:text-sm text-gray-400">Rewards to</div>
                       <div className="flex items-center gap-2">
                           <code className="flex-1 text-sm text-white px-3 py-1 rounded text-center flex justify-center items-center gap-2">
                               {token.fee_account}
