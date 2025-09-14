@@ -130,7 +130,7 @@ export default function Token() {
       </Link>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 pb-12 mt-[15%] md:mt-[10%]">
+      <div className="max-w-4xl mx-auto px-6 pb-12 mt-[15%] md:mt-[10%] w-full">
         {/* Token Header - Centered */}
         <div className="flex flex-col items-center text-center mb-8">
           {token.image_uri && (
@@ -153,123 +153,127 @@ export default function Token() {
             )}
           </div>
         </div>
-        <div className="space-y-2 w-[60dvw] md:w-[30dvw]">
+        
+        {/* Centered Container for all buttons/links */}
+        <div className="flex flex-col items-center">
+          <div className="space-y-2 w-[60dvw] md:w-[30dvw] max-w-md">
 
-          <div className="bg-black rounded-lg p-3">
-            <div className="flex items-center gap-2 relative">
-                <div className="flex-1 text-md md:text-xl text-gray-400 px-3 py-2 rounded text-center break-all">
-                    {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
-                </div>
-                <button
-                    onClick={() => copyToClipboard(token.mint_address, 'mint')}
-                    className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer absolute right-2 md:right-5"
-                    title="Copy mint address"
-                >
-                {copiedField === 'mint' ? (
-                    <svg className="size-[20px] text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                ) : (
-                    <svg className="size-[20px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                )}
-                </button>
-            </div>
-          </div>
-
-          {/* Social Links */}
-          {(token.website_url || token.twitter_url || token.telegram_url) && (
-              <div className="flex justify-center gap-2">
-                {token.website_url && (
-                  <a
-                    href={token.website_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative"
+            <div className="bg-black rounded-lg p-3">
+              <div className="flex items-center gap-2 relative">
+                  <div className="flex-1 text-md md:text-xl text-gray-400 px-3 py-2 rounded text-center break-all">
+                      {token.mint_address.slice(0, 4)}...{token.mint_address.slice(-4)}
+                  </div>
+                  <button
+                      onClick={() => copyToClipboard(token.mint_address, 'mint')}
+                      className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer absolute right-2 md:right-5"
+                      title="Copy mint address"
                   >
-                    <FiGlobe className="text-gray-300" />
-                    <span className="text-white">site</span>
-                    <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
-                  </a>
-                )}
-                
-                {token.twitter_url && (
-                  <a
-                    href={token.twitter_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative" 
-                  >
-                    <span className="text-white text-lg">𝕏</span>
-                    <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
-                  </a>
-                )}
+                  {copiedField === 'mint' ? (
+                      <svg className="size-[20px] text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                  ) : (
+                      <svg className="size-[20px] text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                  )}
+                  </button>
               </div>
-          )}
+            </div>
 
-          <Link href={`https://x.com/${token.fee_account}`}>
-            {token.fee_account && (
-                <div className="bg-black rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-white px-3 py-1 rounded text-center flex justify-center items-center gap-2">
-                            {token.fee_account}
-                            <div className='text-3xl'>
-                                𝕏
-                            </div>
-                        </code>
-                    </div>
+            {/* Social Links */}
+            {(token.website_url || token.twitter_url || token.telegram_url) && (
+                <div className="flex justify-center gap-2">
+                  {token.website_url && (
+                    <a
+                      href={token.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative"
+                    >
+                      <FiGlobe className="text-gray-300" />
+                      <span className="text-white">site</span>
+                      <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
+                    </a>
+                  )}
+                  
+                  {token.twitter_url && (
+                    <a
+                      href={token.twitter_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-4 py-3 bg-black rounded-lg w-1/2 relative" 
+                    >
+                      <span className="text-white text-lg">𝕏</span>
+                      <FiExternalLink size={14} className="text-gray-400 absolute right-5" />
+                    </a>
+                  )}
                 </div>
             )}
-          </Link>
 
-          <div className='w-full border-b-2 py-1 border-gray-700'></div>
+            <Link href={`https://x.com/${token.fee_account}`}>
+              {token.fee_account && (
+                  <div className="bg-black rounded-lg p-3">
+                      <div className="flex items-center gap-2">
+                          <code className="flex-1 text-sm text-white px-3 py-1 rounded text-center flex justify-center items-center gap-2">
+                              {token.fee_account}
+                              <div className='text-3xl'>
+                                  𝕏
+                              </div>
+                          </code>
+                      </div>
+                  </div>
+              )}
+            </Link>
 
-          <Link href={`https://pump.fun/coin/${token.mint_address}`} className="block">
-            {token.fee_account && (
-                <div className="bg-black rounded-lg p-2">
-                    <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
-                            <div className="flex justify-center items-center gap-2">
-                                <img src="pill.png" className='size-8' />
-                                View on pump
-                            </div>
-                        </code>
-                    </div>
-                </div>
-            )}
-          </Link>
+            <div className='w-full border-b-2 py-1 border-gray-700'></div>
 
-          <Link href="https://jup.ag/" className="block">
-            {token.fee_account && (
-                <div className="bg-black rounded-lg p-2">
-                    <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
-                            <div className="flex justify-center items-center gap-2">
-                                <img src="logo.png" className='size-7' />
-                                Buy on Jupiter
-                            </div>
-                        </code>
-                    </div>
-                </div>
-            )}
-          </Link>
+            <Link href={`https://pump.fun/coin/${token.mint_address}`} className="block">
+              {token.fee_account && (
+                  <div className="bg-black rounded-lg p-2">
+                      <div className="flex items-center gap-2">
+                          <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                              <div className="flex justify-center items-center gap-2">
+                                  <img src="pill.png" className='size-8' />
+                                  View on pump
+                              </div>
+                          </code>
+                      </div>
+                  </div>
+              )}
+            </Link>
 
-          <Link href={`https://axiom.trade/t/${token.mint_address}`} className="block">
-            {token.fee_account && (
-                <div className="bg-black rounded-lg p-2">
-                    <div className="flex items-center gap-2">
-                        <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
-                            <div className="flex justify-center items-center gap-2">
-                                <img src="axiom.png" className='size-7 rounded-full' />
-                                Buy on Axiom
-                            </div>
-                        </code>
-                    </div>
-                </div>
-            )}
-          </Link>
+            <Link href="https://jup.ag/" className="block">
+              {token.fee_account && (
+                  <div className="bg-black rounded-lg p-2">
+                      <div className="flex items-center gap-2">
+                          <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                              <div className="flex justify-center items-center gap-2">
+                                  <img src="logo.png" className='size-7' />
+                                  Buy on Jupiter
+                              </div>
+                          </code>
+                      </div>
+                  </div>
+              )}
+            </Link>
 
+            <Link href={`https://axiom.trade/t/${token.mint_address}`} className="block">
+              {token.fee_account && (
+                  <div className="bg-black rounded-lg p-2">
+                      <div className="flex items-center gap-2">
+                          <code className="flex-1 text-sm text-gray-300 px-3 py-2 rounded text-center">
+                              <div className="flex justify-center items-center gap-2">
+                                  <img src="axiom.png" className='size-7 rounded-full' />
+                                  Buy on Axiom
+                              </div>
+                          </code>
+                      </div>
+                  </div>
+              )}
+            </Link>
+
+          </div>
         </div>
       </div>
     </div>

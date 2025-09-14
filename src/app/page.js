@@ -131,12 +131,20 @@ export default function Home() {
         </div>
 
         <div className='absolute top-5 right-[9%]'>
-          <Link
-            href="/claim"
-            className="px-4 py-2 text-gray-900 mb-2 bg-[#67D682] rounded-lg text-sm"
-          >
-            claim
-          </Link>
+          <div className='flex justify-center items-center gap-2'>
+            <Link
+              href="/FAQ"
+              className="px-4 py-2 text-white mb-2 rounded-lg text-sm font-medium"
+            >
+              FAQs
+            </Link>
+            <Link
+              href="/claim"
+              className="px-4 py-2 text-gray-900 mb-2 bg-[#67D682] rounded-lg text-sm"
+            >
+              claim
+            </Link>
+          </div>
         </div>
         
 
