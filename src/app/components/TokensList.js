@@ -464,14 +464,14 @@ const TokensList = () => {
             <button
               onClick={() => handlePageChange(pagination.page - 1)}
               disabled={!pagination.hasPrev}
-              className="bg-[#2F3036] hover:bg-[#404146] disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1 rounded text-sm transition-colors"
+              className="bg-[#2F3036] disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1 rounded text-sm transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => handlePageChange(pagination.page + 1)}
               disabled={!pagination.hasNext}
-              className="bg-[#2F3036] hover:bg-[#404146] disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1 rounded text-sm transition-colors"
+              className="bg-[#2F3036] disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1 rounded text-sm transition-colors"
             >
               Next
             </button>
