@@ -18,12 +18,23 @@ export async function GET(request) {
     
     const offset = (page - 1) * limit;
 
+    // Define blocked fee accounts (both with and without @ symbol)
+    const blockedAccounts = [
+      'Sol_memories', '@Sol_memories',
+      'fakelove26790', '@fakelove26790'
+    ];
+
     // Build query
     let query = supabase
       .from('tokens')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .order('created_at', { ascending: false });
+
+    // Exclude blocked fee accounts
+    // Use NOT IN with case-insensitive matching
+    blockedAccounts.forEach(blocked => {
+      query = query.not('fee_account', 'ilike', blocked);
+    });
 
     // Add fee_account filter for logged-in user (case-insensitive)
     if (feeAccount) {
@@ -38,6 +49,9 @@ export async function GET(request) {
     if (search) {
       query = query.or(`name.ilike.%${search}%,symbol.ilike.%${search}%,mint_address.ilike.%${search}%`);
     }
+
+    // Apply pagination after all filters
+    query = query.range(offset, offset + limit - 1);
 
     const { data: tokens, error, count } = await query;
 
